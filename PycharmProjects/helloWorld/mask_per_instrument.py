@@ -148,6 +148,7 @@ def masked_sift_bass_clarinet(filename):
     return fig_mask, mask_freqs
 
 # for the trumpet the iterated masked sift seems to work better than manually selecting masks
-# for the tuba the simple sift continues to be the best decomposition.
+# for the tuba the simple sift continues to be the best decomposition, maybe try to add a parameter to improve the simple
+# sift instead of trying to create a custom mask.
 # for the oboe the iterated masked sift seems to work well.
 
