@@ -2,12 +2,17 @@ import emd
 import librosa
 
 
-def masked_sift_cello(filename):
+def masked_sift_1965(filename):
+    # this mask works for the cello and viola, although the viola decomposition is not perfect.
+    # Can't tell if the previous mask works better for the viola, both look quite similar.
 
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
-                         filename + '.mp3', offset=0.25, duration=0.25)
+                         filename + '.mp3', offset=0.25, duration=0.5)
 
-    mask_freq_1 = [1965/sr, 982/sr, 225/sr, 122/sr]
+    # used a slightly longer duration to make sure that that weird wave thing is showing
+    # (it seemed important to include)
+
+    mask_freq_1 = [1965/sr, 778/sr, 259/sr, 194/sr]
     imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_1, ret_mask_freq=True, max_imfs=4)
 
     fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
@@ -20,24 +25,8 @@ def masked_sift_violin(filename):
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
-    mask_freq_2 = [2679/sr, 1339/sr, 522/sr, 270/sr]
+    mask_freq_2 = [2679/sr, 1400/sr, 500/sr, 100/sr]
     imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_2, ret_mask_freq=True, max_imfs=4)
-
-    fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
-
-    return fig_mask, mask_freqs
-
-
-def masked_sift_viola(filename):
-
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
-                         filename + '.mp3',  offset=0.25, duration=0.5)
-
-    # used a slightly longer duration to make sure that that weird wave thing is showing
-    # (it seemed important to include)
-
-    mask_freq_3 = [1557/sr, 778/sr, 259/sr, 194/sr]
-    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_3, ret_mask_freq=True, max_imfs=5)
 
     fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
 
