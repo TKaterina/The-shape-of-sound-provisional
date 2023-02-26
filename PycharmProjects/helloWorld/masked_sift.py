@@ -56,25 +56,17 @@ def masked_sift_1939(filename):
     return fig_mask, mask_freqs
 
 
-def masked_sift_clarinet(filename):
+def masked_sift_1322(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
-                         filename + '.mp3', offset=0.25, duration=0.25)
-
-    mask_freq_4 = 1622/sr
-    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_4, ret_mask_freq=True, max_imfs=5)
-
-    fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
-
-    return fig_mask, mask_freqs
-
-
-def masked_sift_flute(filename):
+    # this one works for the clarinet, bass-clarinet and flute.
+    # it's possible that the decomposition is not as good for the clarinet, but it's not bad I think.
 
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.75, duration=0.25)
 
-    mask_freq_4 = 1182/sr
+    # chose a later offset so that both of the weird wave things of the clarinet are visible.
+
+    mask_freq_4 = 1322/sr
     imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_4, ret_mask_freq=True, max_imfs=5)
 
     fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
@@ -82,19 +74,21 @@ def masked_sift_flute(filename):
     return fig_mask, mask_freqs
 
 
-def masked_sift_bass_clarinet(filename):
+def iterated_masked_sift(filename):
+    # filenames when calling: oboe_C4_1_fortissimo_normal
+    #                         trumpet_C4_1_fortissimo_normal
 
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
-    mask_freq_4 = [1461/sr, 730/sr, 260/sr, 182/sr]
-    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_4, ret_mask_freq=True, max_imfs=5)
+    imf, mask_freqs = emd.sift.iterated_mask_sift(y, sample_rate=sr, w_method='amplitude', max_imfs=5, ret_mask_freq=True)
+    # default for w_method is 'power'
 
     fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
 
     return fig_mask, mask_freqs
 
-# for the trumpet the iterated masked sift seems to work better than manually selecting masks
+
 # for the tuba the simple sift continues to be the best decomposition.
-# for the oboe the iterated masked sift seems to work well.
+
 
