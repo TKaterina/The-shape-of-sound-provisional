@@ -4,7 +4,7 @@ import numpy as np
 
 
 def note_playback(filename):
-    filepath = "C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/" + filename + ".mp3"
+    filepath = "C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/" + filename + ".mp3"
     y, sr = librosa.load(filepath)
     audio = y * (2 ** 15 - 1) / np.max(np.abs(y))
     audio = audio.astype(np.int16)

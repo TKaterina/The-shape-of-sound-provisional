@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 def note_data_frame(filename):
 
     # import mp3 file
-    filepath = "C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/" + filename + ".mp3"
+    filepath = "C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/" + filename + ".mp3"
     y, sr = librosa.load(filepath)
     df = pd.DataFrame({filename: y})
 
