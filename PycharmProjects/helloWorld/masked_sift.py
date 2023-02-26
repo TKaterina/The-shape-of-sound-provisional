@@ -40,25 +40,15 @@ def masked_sift_2530(filename):
     return fig_mask, mask_freqs
 
 
-def masked_sift_guitar(filename):
+def masked_sift_1939(filename):
+
+    # this one works for both guitar and banjo and is better than the previous versions of the custom masks
+    # Not perfect but pretty good.
 
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
-    mask_freq_4 = [1939/sr, 969/sr, 484/sr, 261/sr, 100/sr]
-    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_4, ret_mask_freq=True, max_imfs=5)
-
-    fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
-
-    return fig_mask, mask_freqs
-
-
-def masked_sift_banjo(filename):
-
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
-                         filename + '.mp3', offset=0.25, duration=0.25)
-
-    mask_freq_4 = [1081/sr, 522/sr, 254/sr, 135/sr]
+    mask_freq_4 = [1939/sr, 969/sr, 500/sr, 300/sr, 100/sr]
     imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_4, ret_mask_freq=True, max_imfs=5)
 
     fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
