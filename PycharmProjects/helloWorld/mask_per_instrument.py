@@ -4,7 +4,7 @@ import librosa
 
 def masked_sift_cello(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_1 = [1965/sr, 982/sr, 225/sr, 122/sr]
@@ -17,7 +17,7 @@ def masked_sift_cello(filename):
 
 def masked_sift_violin(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_2 = [2679/sr, 1339/sr, 522/sr, 270/sr]
@@ -30,7 +30,7 @@ def masked_sift_violin(filename):
 
 def masked_sift_viola(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3',  offset=0.25, duration=0.5)
 
     # used a slightly longer duration to make sure that that weird wave thing is showing
@@ -46,7 +46,7 @@ def masked_sift_viola(filename):
 
 def masked_sift_double_bass(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_4 = 2530/sr
@@ -59,7 +59,7 @@ def masked_sift_double_bass(filename):
 
 def masked_sift_guitar(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_4 = [1939/sr, 969/sr, 484/sr, 261/sr, 100/sr]
@@ -72,7 +72,7 @@ def masked_sift_guitar(filename):
 
 def masked_sift_banjo(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_4 = [1081/sr, 522/sr, 254/sr, 135/sr]
@@ -85,7 +85,7 @@ def masked_sift_banjo(filename):
 
 def masked_sift_trombone(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_4 = 3169/sr
@@ -98,7 +98,7 @@ def masked_sift_trombone(filename):
 
 def masked_sift_clarinet(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_4 = 1622/sr
@@ -111,7 +111,7 @@ def masked_sift_clarinet(filename):
 
 def masked_sift_flute(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.75, duration=0.25)
 
     mask_freq_4 = 1182/sr
@@ -124,7 +124,7 @@ def masked_sift_flute(filename):
 
 def masked_sift_sax(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_4 = 2799/sr
@@ -137,7 +137,7 @@ def masked_sift_sax(filename):
 
 def masked_sift_bass_clarinet(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
     mask_freq_4 = [1461/sr, 730/sr, 260/sr, 182/sr]

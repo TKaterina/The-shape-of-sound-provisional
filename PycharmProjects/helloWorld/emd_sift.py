@@ -4,7 +4,7 @@ import librosa
 
 def simple_sift(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', duration=0.5)
     # extract the imfs
     imf = emd.sift.sift(y, max_imfs=5, imf_opts={'sd_thresh': 0.1})
@@ -16,7 +16,7 @@ def simple_sift(filename):
 
 
 def noise_assisted_sift(filename):
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', duration=0.5)
 
     # extract the imfs
@@ -31,7 +31,7 @@ def noise_assisted_sift(filename):
 
 def masked_sift(filename):
 
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/The shape of sound/mp3Gallery/' +
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', duration=0.5) # offset=0.25, duration=0.25)
 
     # if the mask frequency is not defined (mask_freqs and ret_mask_freq are removed), then the mask frequency is
