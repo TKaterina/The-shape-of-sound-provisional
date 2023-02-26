@@ -9,24 +9,11 @@ def masked_sift_1965(filename):
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.5)
 
-    # used a slightly longer duration to make sure that that weird wave thing is showing
+    # used a slightly longer duration to make sure that that weird wave thing of the viola is showing
     # (it seemed important to include)
 
     mask_freq_1 = [1965/sr, 778/sr, 259/sr, 194/sr]
     imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_1, ret_mask_freq=True, max_imfs=4)
-
-    fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
-
-    return fig_mask, mask_freqs
-
-
-def masked_sift_violin(filename):
-
-    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
-                         filename + '.mp3', offset=0.25, duration=0.25)
-
-    mask_freq_2 = [2679/sr, 1400/sr, 500/sr, 100/sr]
-    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_2, ret_mask_freq=True, max_imfs=4)
 
     fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
 
@@ -40,6 +27,8 @@ def masked_sift_2530(filename):
     # for the sax the decomposition is the same as when a custom mask was used, but for the trombone
     # the decomposition is different compared to before. Maybe this version of the decomposition is better because
     # imfs 2, 3, 4 look better this way.
+    # surprisingly it also works for the violin. There seems to be some mode-mixing between imf3 and 4 but
+    # that happens with the custom mask. Can't get rig of the mixing completely.
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
