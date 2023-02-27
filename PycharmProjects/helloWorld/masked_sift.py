@@ -12,8 +12,25 @@ def masked_sift_1965(filename):
 
     # slightly longer duration to make sure that that weird wave thing of the viola is visible
 
-    mask_freq_1 = [1965/sr, 778/sr, 259/sr, 194/sr]
-    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_1, ret_mask_freq=True, max_imfs=4)
+    mask_freq_1 = [1965/sr, 778/sr, 259/sr]
+    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_1, ret_mask_freq=True, max_imfs=5)
+
+    fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
+
+    return fig_mask, mask_freqs
+
+def masked_sift_2679(filename):
+    # filenames when calling:double-bass_C4_1_fortissimo_arco-normal
+    #                        violin_C4_1_fortissimo_arco-normal
+    # the last two imfs of the violin always mix a little, this just looks the best.
+    # the decomposition of the double-bass changes a lot with different masks. Can't tell which one is the best.
+    # the third imf changes when the third mask is 500 and 650. Which doesn't happen with the violin.
+
+    y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
+                         filename + '.mp3', offset=0.25, duration=0.25)
+
+    mask_freq_2 = [2679/sr, 1400/sr, 550/sr, 234/sr, 57/sr]
+    imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_2, ret_mask_freq=True, max_imfs=5)
 
     fig_mask = emd.plotting.plot_imfs(imf[:sr, :])
 
@@ -21,14 +38,10 @@ def masked_sift_1965(filename):
 
 
 def masked_sift_2530(filename):
-    # filenames when calling:double-bass_C4_1_fortissimo_arco-normal
-    #                        violin_C4_1_fortissimo_arco-normal
-    #                        saxophone_C4_1_fortissimo_normal
+    # filenames when calling:saxophone_C4_1_fortissimo_normal
     #                        trombone_C4_1_fortissimo_normal
-    # Cannot tell if for the trombone the decomposition is better than when using the custom mask,
-    # but imfs 2, 3, 4, seem a bit better.
-    # For the violin there seems to be some mode-mixing between imf3 and 4 but
-    # that happens with the custom mask. Can't get rig of the mixing completely.
+    # Cannot tell if for the trombone the decomposition is better than when using the custom mask.
+
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
 
