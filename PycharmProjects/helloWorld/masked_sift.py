@@ -54,13 +54,14 @@ def masked_sift_2530(filename):
 
 
 def masked_sift_1939(filename):
-    # filenames when calling:guitar_C4_very - long_forte_normal
+    # filenames when calling:guitar_C4_very-long_forte_normal
     #                        banjo_C4_very-long_forte_normal
     # this one works better than the previous versions of the custom masks, probably not perfect still.
 
     y, sr = librosa.load('C://Users/ktamp/OneDrive/Desktop/TheShapeofSound/mp3Gallery/' +
                          filename + '.mp3', offset=0.25, duration=0.25)
-
+    # just 1939 works exactly the same for the banjo but is slightly different for the guitar but not different enough
+    # that it looks important. 
     mask_freq_4 = [1939/sr, 969/sr, 500/sr, 300/sr, 100/sr]
     imf, mask_freqs = emd.sift.mask_sift(y, mask_freqs=mask_freq_4, ret_mask_freq=True, max_imfs=5)
 
