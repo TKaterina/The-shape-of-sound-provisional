@@ -17,16 +17,16 @@ time = np.linspace(0, seconds,  int(seconds*sample_rate))
 # w is the amplitude envelope - an oscillation that gradually speeds up over
 # time. Start and finish speed controlled by f0 and f1
 w = signal.chirp(time, f0=0.1, f1=75, t1=seconds, method='linear') / 2 + 1
-#w = signal.chirp(time, f0=0.1, f1=15, t1=seconds, method='linear') / 2  # only fluctuation
-#w = signal.chirp(time, f0=0.1, f1=70, t1=seconds, method='linear') / 2  # fluctuation and roughness
-#w = signal.chirp(time, f0=0.1, f1=300, t1=seconds, method='linear') / 2  # reaches residue pitch
+# w = signal.chirp(time, f0=0.1, f1=15, t1=seconds, method='linear') / 2  # only fluctuation
+# w = signal.chirp(time, f0=0.1, f1=70, t1=seconds, method='linear') / 2  # fluctuation and roughness
+# w = signal.chirp(time, f0=0.1, f1=300, t1=seconds, method='linear') / 2  # reaches residue pitch
 w = signal.chirp(time, f0=0.1, f1=1000, t1=seconds, method='linear') / 2
 
 # Carrier is the pure tone that will be modulated - set at 300Hz (arbitrary for now)
-carrier = np.sin(2*np.pi*5500*time)  # theoretically ITD can only be heard here
-#carrier = np.sin(2*np.pi*1000*time)
-#carrier = np.sin(2*np.pi*300*time)  # theoretically only fluctuation and roughness will be heard
-#carrier = np.sin(2*np.pi*700*time)
+carrier = np.sin(2*np.pi*5500*time)  # ITD can only be heard here
+# carrier = np.sin(2*np.pi*1000*time)
+# carrier = np.sin(2*np.pi*300*time)  # only fluctuation and roughness will be heard
+# carrier = np.sin(2*np.pi*700*time)  # just another frequency to see if the plots are consistent.
 
 
 note = w * carrier
@@ -50,7 +50,7 @@ if play:
 #%% --------------------------------
 # EMD
 
-imf = emd.sift.sift(note, imf_opts={'sd_thresh': 1e-3})
+imf = emd.sift.sift(note, imf_opts={'sd_thresh': 1e-3}) # initial threshold 1e-6
 
 IP, IF, IA = emd.spectra.frequency_transform(imf, sample_rate, 'hilbert', smooth_phase=441)
 freq_edges, freq_centres = emd.spectra.define_hist_bins(5200, 5700, 128, 'linear')
@@ -64,7 +64,7 @@ hht = ndimage.gaussian_filter(hht, 1)
 #%% --------------------------------
 # FFT
 
-f2, t2, pxx = signal.spectrogram(note, fs=sample_rate, nperseg=sample_rate//50, noverlap=sample_rate//100)
+f2, t2, pxx = signal.spectrogram(note, fs=sample_rate, nperseg=sample_rate//10, noverlap=sample_rate//20)
 
 
 #%% --------------------------------
