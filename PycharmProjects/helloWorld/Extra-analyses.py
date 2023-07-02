@@ -10,7 +10,6 @@ df04 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df05 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s005_Roughness._2023_Jun_30_1400.csv")
 df06 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv")
 
-
 def prep(data_frame):
     # Keep only rows with slider responses
     drops = np.isnan(data_frame['slider_3.response'].values) == False
@@ -20,25 +19,46 @@ def prep(data_frame):
 
     xtab = data_frame.pivot_table(index=['question', 'am', 'carrier'])
 
-    ratings = xtab['slider_3.response'].values.reshape(3, 7, 3).T
+    response_time = data_frame['slider_3.rt'].to_frame()
+    # ratings = xtab['slider_3.response'].values.reshape(3, 7, 3).T
 
     amp = np.unique(data_frame['am'].values)
     carr = np.unique(data_frame['carrier'].values)
 
-    return xtab, ratings, amp, carr
+    return xtab, response_time, amp, carr, data_frame
 
 
-xtab1 = prep(df01)[0]
-xtab2 = prep(df02)[0]
-xtab3 = prep(df03)[0]
-xtab4 = prep(df04)[0]
-xtab5 = prep(df05)[0]
-xtab6 = prep(df06)[0]
+xtab1, rt1, am, carrier, df01 = prep(df01)
+xtab2, rt2, _, _ , df02 = prep(df02)
+xtab3, rt3, _, _, df03 = prep(df03)
+xtab4, rt4, _, _, df04 = prep(df04)
+xtab5, rt5, _, _, df05 = prep(df05)
+xtab6, rt6, _, _, df06 = prep(df06)
 
-ratings = [prep(df01)[1], prep(df02)[1], prep(df03)[1], prep(df04)[1], prep(df05)[1], prep(df06)[1]]
+rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6])
 
-am = prep(df01)[2]
-carrier = prep(df01)[3]
+M = np.mean(rt.values)
+SD = np.std(rt.values)
+lower_bound = M - 2*SD
+upper_bound = M + 2*SD
+
+
+def remove_outliers(xtab,upper,lower):
+
+    # xtab = xtab.drop(xtab['slider_3.rt'].values < lower_bound | xtab['slider_3.rt'].values > upper_bound)
+    drops = ((xtab['slider_3.rt'].values > upper) | (xtab['slider_3.rt'].values < lower))
+    xtab[drops==True] = 'Outlier'
+    ratings = xtab['slider_3.response'].values.reshape(3, 7, 3).T
+
+    return ratings, xtab
+
+
+ratings = [remove_outliers(xtab1, upper_bound, lower_bound)[0],
+           remove_outliers(xtab2, upper_bound, lower_bound)[0],
+           remove_outliers(xtab3, upper_bound, lower_bound)[0],
+           remove_outliers(xtab4, upper_bound, lower_bound)[0],
+           remove_outliers(xtab5, upper_bound, lower_bound)[0],
+           remove_outliers(xtab6, upper_bound, lower_bound)[0]]
 
 output = np.zeros((len(ratings), 1))
 result = np.zeros([len(carrier), len(am), 3])
@@ -63,7 +83,7 @@ for i in np.arange(0,3):
     plt.subplot(1,3,i+1)
     plt.plot(np.arange(7), result[i], lw=2)
     plt.xticks(np.arange(7), am)
-    plt.xlabel('Amplitude Modulation Frequenacy (Hz)')
+    plt.xlabel('Amplitude Modulation Frequency (Hz)')
     plt.ylabel('Perceived Difference Rating')
     plt.legend(['Pitch', 'Roughness', 'Tremolo'])
     plt.grid(True)
@@ -71,12 +91,34 @@ for i in np.arange(0,3):
         plt.gca().spines[tag].set_visible(False)
     plt.title(carrier_title[i])
 
+# calculate the within subjects variance per percept
+def within_block_variance(data_frame):
+
+    xtab_means = data_frame.pivot_table(index=['question', 'am', 'carrier'],values = 'slider_3.response', aggfunc=np.mean)
+    xtab_std = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc=np.std)
+
+    #xtab_diff = data_frame.pivot_table(index=['question', 'am', 'carrier', 'slider_3.rt'])
+    #difference = np.zeros((np.int16(len(xtab_diff)/3), 1))
+    #wcv = np.zeros((np.int16(len(xtab_diff) / 3), 1))
+    #for n in range(0,len(xtab_diff), 3):
+        #difference[n] = np.diff(xtab_diff['slider_3.response'].values[n: n+3], 2)
+
+        #temp = difference[n] ** 2 / 2
+        # Individual CVs
+        #cv = np.sqrt(temp) / xtab_means['slider_3.response'].values[n]
+        # Within-subject coefficient of variation
+        #wcv[n] = np.sqrt(np.mean(cv ** 2))
+
+    wcv = xtab_std['slider_3.response'].values/xtab_means['slider_3.response'].values
+
+    return wcv
 
 
-plt.plot(ratings[0], linestyle='solid')
-plt.plot(ratings[1], linestyle='dashed')
-plt.plot(ratings[2], linestyle='dotted')
-plt.plot(ratings[3], linestyle='solid')
-plt.plot(ratings[4], linestyle='dashed')
-plt.plot(ratings[5], linestyle='dotted')
+wbcv = [within_block_variance(df01),
+           within_block_variance(df02),
+           within_block_variance(df03),
+           within_block_variance(df04),
+           within_block_variance(df05),
+           within_block_variance(df06)]
+
 
