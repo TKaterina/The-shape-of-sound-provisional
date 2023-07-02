@@ -62,18 +62,22 @@ ratings = [remove_outliers(xtab1, upper_bound, lower_bound)[0],
 
 output = np.zeros((len(ratings), 1))
 result = np.zeros((len(ratings[0]), 3))
-standard_deviation = np.zeros((len(ratings[0]), 3))
+variance = np.zeros((len(ratings[0]), 3))
+n_obs = np.zeros((len(ratings[0]), 3))
 
 for k in np.arange(0,3):
     for j in range(len(ratings[0])):
+        count = 0
         for i in range(len(ratings)):
             if ratings[i][j][k] != 'Outlier':
                 output[i] = ratings[i][j][k]
+                count += 1
             else:
                 output[i] = 'NaN'
 
+        n_obs[j][k] = count
+        variance[j][k] = np.nanvar(output)
         result[j][k] = np.nanmean(output)
-        standard_deviation[j][k] = np.nanstd(output)
 
 
 
@@ -88,16 +92,15 @@ for tag in ['top', 'right']:
     plt.gca().spines[tag].set_visible(False)
 plt.title('Percept x AM freq')
 
-# temporary calculation of covariance for each modulator frequency and percept.
-covariance = standard_deviation/result
+# calculation of between subject coefficient of variation for each modulator frequency and percept.
+bcv = np.sqrt(n_obs * variance) / result
 plt.figure()
-plt.plot(np.arange(7), covariance, lw=2)
+plt.plot(np.arange(7), bcv, lw=2)
 plt.xticks(np.arange(7), am)
-plt.xlabel('Amplitude Modulation Frequenacy (Hz)')
+plt.xlabel('Amplitude Modulation Frequency (Hz)')
 plt.ylabel('Covariance of ratings')
 plt.legend(['Pitch', 'Roughness', 'Tremolo'])
 plt.grid(True)
 for tag in ['top', 'right']:
     plt.gca().spines[tag].set_visible(False)
 plt.title('Percept x AM freq')
-
