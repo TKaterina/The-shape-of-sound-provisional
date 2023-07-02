@@ -57,9 +57,9 @@ def remove_outliers(xtab,upper,lower):
 
     # xtab = xtab.drop(xtab['slider_3.rt'].values < lower_bound | xtab['slider_3.rt'].values > upper_bound)
     drops = ((xtab['slider_2.rt'].values > upper) | (xtab['slider_2.rt'].values < lower))
-    xtab.loc[drops==True] = 'Outlier'
+    xtab.loc[drops==True, 'slider_2.rt'] = 'Outlier'
 
-    xtab = xtab.pivot(index='instrument1', columns='instrument2', values='slider_2.response')
+    xtab = xtab.pivot_table(index='instrument1', columns='instrument2', values='slider_2.response')
     # ratings = xtab['slider_2.response'].values.reshape(11, 6).T
     #  ratings = xtab['slider_3.response'].values.reshape(12, 12).T
 
@@ -73,3 +73,27 @@ ratings = [remove_outliers(xtab1, upper_bound, lower_bound),
            remove_outliers(xtab5, upper_bound, lower_bound),
            remove_outliers(xtab6, upper_bound, lower_bound)]
 
+output = np.zeros((len(ratings), 1))
+result = np.zeros((len(ratings[0]), len(ratings[0])))
+# standard_deviation = np.zeros((len(ratings[0]), 3))
+for k in range(len(ratings[0])):
+    for j in range(len(ratings[0])):
+        for i in range(len(ratings)):
+            if (ratings[i].values[j][k] != 'Outlier') | (np.isnan(ratings[i].values[j][k])):
+                output[i] = ratings[i].values[j][k]
+            else:
+                output[i] = 'NaN'
+
+        result[j][k] = np.nanmean(output)
+        # standard_deviation[j][k] = np.nanstd(output)
+
+x_labels = ['banjo', 'bass-clarinet', 'cello', 'clarinet', 'flute', 'french-horn', 'guitar', 'oboe', 'trumpet', 'tuba', 'viola']
+y_labels = ['bass-clarinet', 'cello', 'clarinet', 'flute', 'french-horn', 'guitar', 'oboe', 'trumpet', 'tuba', 'viola', 'violin']
+
+fig = plt.figure()
+cax = plt.matshow(result)
+plt.title('Similarity matrix for instrument pairs')
+plt.xticks(range(11), x_labels, rotation=90)
+plt.yticks(range(11), y_labels)
+plt.colorbar(cax)
+plt.show()
