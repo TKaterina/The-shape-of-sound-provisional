@@ -94,8 +94,10 @@ for i in np.arange(0,3):
 # calculate the within subjects variance per percept
 def within_block_variance(data_frame):
 
-    xtab_means = data_frame.pivot_table(index=['question', 'am', 'carrier'],values = 'slider_3.response', aggfunc=np.mean)
-    xtab_std = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc=np.std)
+    # xtab_means = data_frame.pivot_table(index=['question', 'am', 'carrier'],values = 'slider_3.response', aggfunc=np.mean)
+    # xtab_std = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc=np.std)
+    xtab_range = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc={np.min,np.max})
+    # xtab_range = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc=np.range)
 
     #xtab_diff = data_frame.pivot_table(index=['question', 'am', 'carrier', 'slider_3.rt'])
     #difference = np.zeros((np.int16(len(xtab_diff)/3), 1))
@@ -109,16 +111,64 @@ def within_block_variance(data_frame):
         # Within-subject coefficient of variation
         #wcv[n] = np.sqrt(np.mean(cv ** 2))
 
-    wcv = xtab_std['slider_3.response'].values/xtab_means['slider_3.response'].values
+    wcv = xtab_range['amax'].values - xtab_range['amin'].values
 
-    return wcv
+    return wcv, xtab_range
 
 
-wbcv = [within_block_variance(df01),
-           within_block_variance(df02),
-           within_block_variance(df03),
-           within_block_variance(df04),
-           within_block_variance(df05),
-           within_block_variance(df06)]
+wbcv = [within_block_variance(df01)[0],
+           within_block_variance(df02)[0],
+           within_block_variance(df03)[0],
+           within_block_variance(df04)[0],
+           within_block_variance(df05)[0],
+           within_block_variance(df06)[0]]
+
+agg_rating = [within_block_variance(df01)[1],
+           within_block_variance(df02)[1],
+           within_block_variance(df03)[1],
+           within_block_variance(df04)[1],
+           within_block_variance(df05)[1],
+           within_block_variance(df06)[1]]
+
+plt.figure()
+for i in range(len(wbcv)):
+
+    plt.hist(wbcv[i], bins=np.arange(0, 100, 5), alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+    plt.xlabel('Modulator x Carrier Frequency Combination')
+    plt.ylabel('Covariance of ratings between blocks')
+    plt.legend(['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    for tag in ['top', 'right']:
+        plt.gca().spines[tag].set_visible(False)
+    plt.title('Covariance of ratings between blocks')
+
+
+plt.figure()
+for i in range(len(wbcv)):
+    plt.subplot(1, 3, 1)
+    plt.hist(wbcv[i][0:21], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+    plt.xlabel('Range of tremolo ratings between blocks')
+    plt.ylabel('Frequency')
+    plt.legend(
+        ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    for tag in ['top', 'right']:
+        plt.gca().spines[tag].set_visible(False)
+
+    plt.subplot(1, 3, 2)
+    plt.hist(wbcv[i][22:42], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+    plt.xlabel('Range of roughness ratings between blocks')
+    plt.ylabel('Frequency')
+    plt.legend(
+        ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    for tag in ['top', 'right']:
+        plt.gca().spines[tag].set_visible(False)
+
+    plt.subplot(1, 3, 3)
+    plt.hist(wbcv[i][43:], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+    plt.xlabel('Range of pitch ratings between blocks')
+    plt.ylabel('Frequency')
+    plt.legend(
+        ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    for tag in ['top', 'right']:
+        plt.gca().spines[tag].set_visible(False)
 
 

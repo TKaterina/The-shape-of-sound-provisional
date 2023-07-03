@@ -10,18 +10,19 @@ df04 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df05 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s005_Roughness._2023_Jun_30_1400.csv")
 df06 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv")
 
-instrument_names = {'C:\\Users\\axt275\\Downloads\\banjo_C4_very-long_forte_normal.wav':'banjo',
-                    'C:\\Users\\axt275\\Downloads\\bass-clarinet_C4_1_fortissimo_normal.wav':'bass-clarinet',
-                    'C:\\Users\\axt275\\Downloads\\cello_C4_1_fortissimo_arco-normal.wav':'cello',
-                    'C:\\Users\\axt275\\Downloads\\clarinet_C4_1_fortissimo_normal.wav':'clarinet',
-                    'C:\\Users\\axt275\\Downloads\\flute_C4_1_forte_normal.wav':'flute',
-                    'C:\\Users\\axt275\\Downloads\\french-horn_C4_very-long_forte_normal.wav':'french-horn',
-                    'C:\\Users\\axt275\\Downloads\\guitar_C4_very-long_forte_normal.wav':'guitar',
-                    'C:\\Users\\axt275\\Downloads\\oboe_C4_1_fortissimo_normal.wav':'oboe',
-                    'C:\\Users\\axt275\\Downloads\\trumpet_C4_1_fortissimo_normal.wav':'trumpet',
-                    'C:\\Users\\axt275\\Downloads\\tuba_C4_1_fortissimo_normal.wav':'tuba',
-                    'C:\\Users\\axt275\\Downloads\\viola_C4_1_fortissimo_arco-normal.wav':'viola',
-                    'C:\\Users\\axt275\\Downloads\\violin_C4_1_fortissimo_arco-normal.wav':'violin'}
+
+# instrument_names = {'C:\\Users\\axt275\\Downloads\\banjo_C4_very-long_forte_normal.wav':'banjo',
+ #                   'C:\\Users\\axt275\\Downloads\\bass-clarinet_C4_1_fortissimo_normal.wav':'bass-clarinet',
+  #                  'C:\\Users\\axt275\\Downloads\\cello_C4_1_fortissimo_arco-normal.wav':'cello',
+   #                 'C:\\Users\\axt275\\Downloads\\clarinet_C4_1_fortissimo_normal.wav':'clarinet',
+    #                'C:\\Users\\axt275\\Downloads\\flute_C4_1_forte_normal.wav':'flute',
+     #               'C:\\Users\\axt275\\Downloads\\french-horn_C4_very-long_forte_normal.wav':'french-horn',
+      #              'C:\\Users\\axt275\\Downloads\\guitar_C4_very-long_forte_normal.wav':'guitar',
+       #             'C:\\Users\\axt275\\Downloads\\oboe_C4_1_fortissimo_normal.wav':'oboe',
+        #            'C:\\Users\\axt275\\Downloads\\trumpet_C4_1_fortissimo_normal.wav':'trumpet',
+         #           'C:\\Users\\axt275\\Downloads\\tuba_C4_1_fortissimo_normal.wav':'tuba',
+          #          'C:\\Users\\axt275\\Downloads\\viola_C4_1_fortissimo_arco-normal.wav':'viola',
+           #         'C:\\Users\\axt275\\Downloads\\violin_C4_1_fortissimo_arco-normal.wav':'violin'}
 
 def prep(data_frame):
     # Keep only rows with slider responses
@@ -32,7 +33,7 @@ def prep(data_frame):
 
     response_time = data_frame['slider_2.rt'].to_frame()
 
-    data_frame = data_frame.rename(index=instrument_names)
+    # data_frame = data_frame.rename(index=instrument_names)
 
     return data_frame, response_time
 
