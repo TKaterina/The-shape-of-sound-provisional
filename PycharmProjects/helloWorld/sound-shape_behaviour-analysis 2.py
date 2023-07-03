@@ -11,7 +11,15 @@ df05 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df06 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv")
 
 
+# filename = ["C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S001_Roughness._2023_Jun_29_1205.csv",
+#                "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s002_Roughness._2023_Jun_29_1409.csv",
+ #               "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S003_Roughness._2023_Jun_29_1603.csv",
+  #              "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s004_Roughness._2023_Jun_30_1239.csv",
+   #             "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s005_Roughness._2023_Jun_30_1400.csv",
+    #        "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv"]
+
 def prep(data_frame):
+
     # Keep only rows with slider responses
     drops = np.isnan(data_frame['slider_3.response'].values) == False
     data_frame = data_frame[drops]
@@ -37,11 +45,19 @@ xtab6, rt6, _ = prep(df06)
 
 rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6])
 
+# plot the response times
+bins = np.linspace(0, 20, 40)
+plt.hist(rt, bins)
+plt.title('Histogram of response times')
+plt.ylabel('Frequency')
+plt.xlabel('Time (seconds)')
+plt.xticks(bins, rotation=45)
+
+
 M = np.mean(rt.values)
 SD = np.std(rt.values)
 lower_bound = M - 2*SD
 upper_bound = M + 2*SD
-
 
 def remove_outliers(xtab,upper,lower):
 
@@ -80,11 +96,10 @@ for k in np.arange(0,3):
         result[j][k] = np.nanmean(output)
 
 
-
 plt.figure()
 plt.plot(np.arange(7), result, lw=2)
 plt.xticks(np.arange(7), am)
-plt.xlabel('Amplitude Modulation Frequenacy (Hz)')
+plt.xlabel('Amplitude Modulation Frequency (Hz)')
 plt.ylabel('Perceived Difference Rating')
 plt.legend(['Pitch', 'Roughness', 'Tremolo'])
 plt.grid(True)
@@ -93,9 +108,10 @@ for tag in ['top', 'right']:
 plt.title('Percept x AM freq')
 
 # calculation of between subject coefficient of variation for each modulator frequency and percept.
-bcv = np.sqrt(n_obs * variance) / result
+btw_var = np.sqrt(n_obs * variance) / result
+
 plt.figure()
-plt.plot(np.arange(7), bcv, lw=2)
+plt.plot(np.arange(7), btw_var, lw=2)
 plt.xticks(np.arange(7), am)
 plt.xlabel('Amplitude Modulation Frequency (Hz)')
 plt.ylabel('Covariance of ratings')
