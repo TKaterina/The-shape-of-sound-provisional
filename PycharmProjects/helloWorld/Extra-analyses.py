@@ -97,19 +97,6 @@ def within_block_variance(data_frame):
     # xtab_means = data_frame.pivot_table(index=['question', 'am', 'carrier'],values = 'slider_3.response', aggfunc=np.mean)
     # xtab_std = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc=np.std)
     xtab_range = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc={np.min,np.max})
-    # xtab_range = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc=np.range)
-
-    #xtab_diff = data_frame.pivot_table(index=['question', 'am', 'carrier', 'slider_3.rt'])
-    #difference = np.zeros((np.int16(len(xtab_diff)/3), 1))
-    #wcv = np.zeros((np.int16(len(xtab_diff) / 3), 1))
-    #for n in range(0,len(xtab_diff), 3):
-        #difference[n] = np.diff(xtab_diff['slider_3.response'].values[n: n+3], 2)
-
-        #temp = difference[n] ** 2 / 2
-        # Individual CVs
-        #cv = np.sqrt(temp) / xtab_means['slider_3.response'].values[n]
-        # Within-subject coefficient of variation
-        #wcv[n] = np.sqrt(np.mean(cv ** 2))
 
     wcv = xtab_range['amax'].values - xtab_range['amin'].values
 
@@ -131,44 +118,87 @@ agg_rating = [within_block_variance(df01)[1],
            within_block_variance(df06)[1]]
 
 plt.figure()
+plt.hist(wbcv)
+plt.xlabel('Modulator x Carrier Frequency Combination')
+plt.ylabel('Covariance of ratings between blocks')
+for tag in ['top', 'right']:
+    plt.gca().spines[tag].set_visible(False)
+plt.title('Covariance of ratings between blocks')
+
+
+#for i in range(len(wbcv)):
+
+ #   plt.hist(wbcv[i], bins=np.arange(0, 100, 5), alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+  #  plt.xlabel('Modulator x Carrier Frequency Combination')
+   # plt.ylabel('Covariance of ratings between blocks')
+    #for tag in ['top', 'right']:
+     #   plt.gca().spines[tag].set_visible(False)
+    #plt.title('Covariance of ratings between blocks')
+
+
+fig, ax = plt.subplots(1, 2, figsize=(12, 7))
 for i in range(len(wbcv)):
-
-    plt.hist(wbcv[i], bins=np.arange(0, 100, 5), alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
-    plt.xlabel('Modulator x Carrier Frequency Combination')
-    plt.ylabel('Covariance of ratings between blocks')
-    plt.legend(['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    # plot the between block variance of pitch at modulators = {5, 10, 20 ,40, 80} hz
+    plt.subplot(1, 2, 1)
+    plt.hist(wbcv[i][0:15], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+    plt.ylabel('Frequency')
+    plt.xlabel('Within participant variance between blocks')
     for tag in ['top', 'right']:
         plt.gca().spines[tag].set_visible(False)
-    plt.title('Covariance of ratings between blocks')
+    plt.title('Pitch at modulators = {5, 10, 20 ,40, 80} hz')
 
+    # plot the between block variance of pitch at modulators = {160, 320} hz
+    plt.subplot(1, 2, 2)
+    plt.hist(wbcv[i][15:21], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+    plt.ylabel('Frequency')
+    plt.xlabel('Within participant variance between blocks')
+    for tag in ['top', 'right']:
+        plt.gca().spines[tag].set_visible(False)
+    plt.title('Pitch at modulators = {160, 320} hz')
 
-plt.figure()
+fig.legend(['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'], loc='center right')
+
+fig, ax = plt.subplots(1, 2, figsize=(12, 7))
 for i in range(len(wbcv)):
-    plt.subplot(1, 3, 1)
-    plt.hist(wbcv[i][0:21], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
-    plt.xlabel('Range of tremolo ratings between blocks')
+    # plot the between block variance of roughness at modulators = {5, 10, 20} hz
+    plt.subplot(1, 2, 1)
+    plt.hist(wbcv[i][21:30], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
     plt.ylabel('Frequency')
-    plt.legend(
-        ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    plt.xlabel('Within participant variance between blocks')
     for tag in ['top', 'right']:
         plt.gca().spines[tag].set_visible(False)
+    plt.title('Roughness at modulators = {5, 10, 20} hz')
 
-    plt.subplot(1, 3, 2)
-    plt.hist(wbcv[i][22:42], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
-    plt.xlabel('Range of roughness ratings between blocks')
+    # plot the between block variance of roughness at modulators = {40, 80, 160, 320} hz
+    plt.subplot(1, 2, 2)
+    plt.hist(wbcv[i][30:42], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
     plt.ylabel('Frequency')
-    plt.legend(
-        ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    plt.xlabel('Within participant variance between blocks')
     for tag in ['top', 'right']:
         plt.gca().spines[tag].set_visible(False)
+    plt.title('Roughness at modulators = {40, 80, 160, 320} hz')
 
-    plt.subplot(1, 3, 3)
-    plt.hist(wbcv[i][43:], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
-    plt.xlabel('Range of pitch ratings between blocks')
+fig.legend(['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'], loc='center right')
+
+fig, ax = plt.subplots(1, 2, figsize=(12, 7))
+for i in range(len(wbcv)):
+    # plot the between block variance of tremolo at modulators = {5, 10, 20, 40} hz
+    plt.subplot(1, 2, 1)
+    plt.hist(wbcv[i][42:54], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
     plt.ylabel('Frequency')
-    plt.legend(
-        ['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'])
+    plt.xlabel('Within participant variance between blocks')
     for tag in ['top', 'right']:
         plt.gca().spines[tag].set_visible(False)
+    plt.title('Tremolo at modulators = {5, 10, 20, 40} hz')
 
+    # plot the between block variance of tremolo at modulators = {80, 160, 320} hz
+    plt.subplot(1, 2, 2)
+    plt.hist(wbcv[i][54:], alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
+    plt.ylabel('Frequency')
+    plt.xlabel('Within participant variance between blocks')
+    for tag in ['top', 'right']:
+        plt.gca().spines[tag].set_visible(False)
+    plt.title('Tremolo at modulators = {80, 160, 320} hz')
+
+fig.legend(['Participant 1', 'Participant 2', 'Participant 3', 'Participant 4', 'Participant 5', 'Participant 6'], loc='center right')#
 
