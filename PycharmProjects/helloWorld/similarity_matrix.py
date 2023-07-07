@@ -9,6 +9,16 @@ df03 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df04 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s004_Roughness._2023_Jun_30_1239.csv")
 df05 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s005_Roughness._2023_Jun_30_1400.csv")
 df06 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv")
+df07 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s007_Roughness._2023_Jul_03_1305.csv")
+df08 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s008_Roughness._2023_Jul_03_1505.csv")
+df09 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s009_Roughness._2023_Jul_04_1313.csv")
+df10 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S010_Roughness._2023_Jul_04_1433.csv")
+df11 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s011_Roughness._2023_Jul_05_1215.csv")
+df12 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s012_Roughness._2023_Jul_05_1304.csv")
+df13 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s013_Roughness._2023_Jul_05_1408.csv")
+df14 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s014_Roughness._2023_Jul_05_1515.csv")
+df15 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S015_Roughness._2023_Jul_07_1210.csv")
+
 
 
 # instrument_names = {'C:\\Users\\axt275\\Downloads\\banjo_C4_very-long_forte_normal.wav':'banjo',
@@ -44,9 +54,18 @@ xtab3, rt3 = prep(df03)
 xtab4, rt4 = prep(df04)
 xtab5, rt5 = prep(df05)
 xtab6, rt6 = prep(df06)
+xtab7, rt7 = prep(df07)
+xtab8, rt8 = prep(df08)
+xtab9, rt9 = prep(df09)
+xtab10, rt10 = prep(df10)
+xtab11, rt11 = prep(df11)
+xtab12, rt12 = prep(df12)
+xtab13, rt13 = prep(df13)
+xtab14, rt14 = prep(df14)
+xtab15, rt15 = prep(df15)
 
 
-rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6])
+rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6, rt7, rt8, rt9, rt10, rt11, rt12, rt13, rt14, rt15])
 
 M = np.mean(rt.values)
 SD = np.std(rt.values)
@@ -72,12 +91,21 @@ ratings = [remove_outliers(xtab1, upper_bound, lower_bound),
            remove_outliers(xtab3, upper_bound, lower_bound),
            remove_outliers(xtab4, upper_bound, lower_bound),
            remove_outliers(xtab5, upper_bound, lower_bound),
-           remove_outliers(xtab6, upper_bound, lower_bound)]
+           remove_outliers(xtab6, upper_bound, lower_bound),
+           remove_outliers(xtab7, upper_bound, lower_bound),
+           remove_outliers(xtab8, upper_bound, lower_bound),
+           remove_outliers(xtab9, upper_bound, lower_bound),
+           remove_outliers(xtab10, upper_bound, lower_bound),
+           remove_outliers(xtab11, upper_bound, lower_bound),
+           remove_outliers(xtab12, upper_bound, lower_bound),
+           remove_outliers(xtab13, upper_bound, lower_bound),
+           remove_outliers(xtab14, upper_bound, lower_bound),
+           remove_outliers(xtab15, upper_bound, lower_bound)]
 
 output = np.zeros((len(ratings), 1))
 result = np.zeros((len(ratings[0]), len(ratings[0])))
 # standard_deviation = np.zeros((len(ratings[0]), 3))
-for k in range(len(ratings[0])):
+for k in range(len(ratings[0].values[0])):
     for j in range(len(ratings[0])):
         for i in range(len(ratings)):
             if (ratings[i].values[j][k] != 'Outlier') | (np.isnan(ratings[i].values[j][k])):
@@ -88,10 +116,9 @@ for k in range(len(ratings[0])):
         result[j][k] = np.nanmean(output)
         # standard_deviation[j][k] = np.nanstd(output)
 
-x_labels = ['banjo', 'bass-clarinet', 'cello', 'clarinet', 'flute', 'french-horn', 'guitar', 'oboe', 'trumpet', 'tuba', 'viola']
-y_labels = ['bass-clarinet', 'cello', 'clarinet', 'flute', 'french-horn', 'guitar', 'oboe', 'trumpet', 'tuba', 'viola', 'violin']
+x_labels = ['bass-clarinet', 'cello', 'clarinet', 'flute', 'french-horn', 'guitar', 'oboe', 'trumpet', 'tuba', 'viola', 'violin']
+y_labels = ['banjo','bass-clarinet', 'cello', 'clarinet', 'flute', 'french-horn', 'guitar', 'oboe', 'trumpet', 'tuba', 'viola']
 
-fig = plt.figure()
 cax = plt.matshow(result)
 plt.title('Similarity matrix for instrument pairs')
 plt.xticks(range(11), x_labels, rotation=90)

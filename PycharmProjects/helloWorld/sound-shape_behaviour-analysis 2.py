@@ -9,6 +9,16 @@ df03 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df04 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s004_Roughness._2023_Jun_30_1239.csv")
 df05 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s005_Roughness._2023_Jun_30_1400.csv")
 df06 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv")
+df07 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s007_Roughness._2023_Jul_03_1305.csv")
+df08 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s008_Roughness._2023_Jul_03_1505.csv")
+df09 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s009_Roughness._2023_Jul_04_1313.csv")
+df10 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S010_Roughness._2023_Jul_04_1433.csv")
+df11 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s011_Roughness._2023_Jul_05_1215.csv")
+df12 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s012_Roughness._2023_Jul_05_1304.csv")
+df13 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s013_Roughness._2023_Jul_05_1408.csv")
+df14 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s014_Roughness._2023_Jul_05_1515.csv")
+df15 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S015_Roughness._2023_Jul_07_1210.csv")
+
 
 
 # filename = ["C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S001_Roughness._2023_Jun_29_1205.csv",
@@ -41,9 +51,17 @@ xtab3, rt3, _ = prep(df03)
 xtab4, rt4, _ = prep(df04)
 xtab5, rt5, _ = prep(df05)
 xtab6, rt6, _ = prep(df06)
+xtab7, rt7, _ = prep(df07)
+xtab8, rt8, _ = prep(df08)
+xtab9, rt9, _ = prep(df09)
+xtab10, rt10, _ = prep(df10)
+xtab11, rt11, _ = prep(df11)
+xtab12, rt12, _ = prep(df12)
+xtab13, rt13, _ = prep(df13)
+xtab14, rt14, _ = prep(df14)
+xtab15, rt15, _ = prep(df15)
 
-
-rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6])
+rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6, rt7, rt8, rt9, rt10, rt11, rt12, rt13, rt14, rt15])
 
 # plot the response times
 bins = np.linspace(0, 20, 40)
@@ -74,7 +92,16 @@ ratings = [remove_outliers(xtab1, upper_bound, lower_bound)[0],
            remove_outliers(xtab3, upper_bound, lower_bound)[0],
            remove_outliers(xtab4, upper_bound, lower_bound)[0],
            remove_outliers(xtab5, upper_bound, lower_bound)[0],
-           remove_outliers(xtab6, upper_bound, lower_bound)[0]]
+           remove_outliers(xtab6, upper_bound, lower_bound)[0],
+           remove_outliers(xtab7, upper_bound, lower_bound)[0],
+           remove_outliers(xtab8, upper_bound, lower_bound)[0],
+           remove_outliers(xtab9, upper_bound, lower_bound)[0],
+           remove_outliers(xtab10, upper_bound, lower_bound)[0],
+           remove_outliers(xtab11, upper_bound, lower_bound)[0],
+           remove_outliers(xtab12, upper_bound, lower_bound)[0],
+           remove_outliers(xtab13, upper_bound, lower_bound)[0],
+           remove_outliers(xtab14, upper_bound, lower_bound)[0],
+           remove_outliers(xtab15, upper_bound, lower_bound)[0]]
 
 output = np.zeros((len(ratings), 1))
 result = np.zeros((len(ratings[0]), 3))
