@@ -9,6 +9,15 @@ df03 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df04 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s004_Roughness._2023_Jun_30_1239.csv")
 df05 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s005_Roughness._2023_Jun_30_1400.csv")
 df06 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv")
+df07 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s007_Roughness._2023_Jul_03_1305.csv")
+df08 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s008_Roughness._2023_Jul_03_1505.csv")
+df09 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s009_Roughness._2023_Jul_04_1313.csv")
+df10 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S010_Roughness._2023_Jul_04_1433.csv")
+df11 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s011_Roughness._2023_Jul_05_1215.csv")
+df12 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s012_Roughness._2023_Jul_05_1304.csv")
+df13 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s013_Roughness._2023_Jul_05_1408.csv")
+df14 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s014_Roughness._2023_Jul_05_1515.csv")
+df15 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S015_Roughness._2023_Jul_07_1210.csv")
 
 def prep(data_frame):
     # Keep only rows with slider responses
@@ -34,8 +43,17 @@ xtab3, rt3, _, _, df03 = prep(df03)
 xtab4, rt4, _, _, df04 = prep(df04)
 xtab5, rt5, _, _, df05 = prep(df05)
 xtab6, rt6, _, _, df06 = prep(df06)
+xtab7, rt7, _, _ , df07 = prep(df07)
+xtab8, rt8, _, _, df08 = prep(df08)
+xtab9, rt9, _, _, df09 = prep(df09)
+xtab10, rt10, _, _, df10 = prep(df10)
+xtab11, rt11, _, _, df11 = prep(df11)
+xtab12, rt12, _, _, df12 = prep(df12)
+xtab13, rt13, _, _, df13 = prep(df13)
+xtab14, rt14, _, _, df14 = prep(df14)
+xtab15, rt15, _, _, df15 = prep(df15)
 
-rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6])
+rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6, rt7, rt8, rt9, rt10, rt11, rt12, rt13, rt14, rt15])
 
 M = np.mean(rt.values)
 SD = np.std(rt.values)
@@ -58,7 +76,16 @@ ratings = [remove_outliers(xtab1, upper_bound, lower_bound)[0],
            remove_outliers(xtab3, upper_bound, lower_bound)[0],
            remove_outliers(xtab4, upper_bound, lower_bound)[0],
            remove_outliers(xtab5, upper_bound, lower_bound)[0],
-           remove_outliers(xtab6, upper_bound, lower_bound)[0]]
+           remove_outliers(xtab6, upper_bound, lower_bound)[0],
+           remove_outliers(xtab7, upper_bound, lower_bound)[0],
+           remove_outliers(xtab8, upper_bound, lower_bound)[0],
+           remove_outliers(xtab9, upper_bound, lower_bound)[0],
+           remove_outliers(xtab10, upper_bound, lower_bound)[0],
+           remove_outliers(xtab11, upper_bound, lower_bound)[0],
+           remove_outliers(xtab12, upper_bound, lower_bound)[0],
+           remove_outliers(xtab13, upper_bound, lower_bound)[0],
+           remove_outliers(xtab14, upper_bound, lower_bound)[0],
+           remove_outliers(xtab15, upper_bound, lower_bound)[0]]
 
 output = np.zeros((len(ratings), 1))
 result = np.zeros([len(carrier), len(am), 3])
@@ -94,13 +121,13 @@ for i in np.arange(0,3):
 # calculate the within subjects variance per percept
 def within_block_variance(data_frame):
 
-    # xtab_means = data_frame.pivot_table(index=['question', 'am', 'carrier'],values = 'slider_3.response', aggfunc=np.mean)
+    xtab_means = data_frame.pivot_table(index=['question', 'am', 'carrier'],values = 'slider_3.response', aggfunc=np.mean)
     # xtab_std = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc=np.std)
     xtab_range = data_frame.pivot_table(index=['question', 'am', 'carrier'], values='slider_3.response',aggfunc={np.min,np.max})
 
     wcv = xtab_range['amax'].values - xtab_range['amin'].values
 
-    return wcv, xtab_range
+    return wcv, xtab_means, xtab_range
 
 
 wbcv = [within_block_variance(df01)[0],
@@ -108,32 +135,127 @@ wbcv = [within_block_variance(df01)[0],
            within_block_variance(df03)[0],
            within_block_variance(df04)[0],
            within_block_variance(df05)[0],
-           within_block_variance(df06)[0]]
+           within_block_variance(df06)[0],
+           within_block_variance(df07)[0],
+           within_block_variance(df08)[0],
+           within_block_variance(df09)[0],
+           within_block_variance(df10)[0],
+           within_block_variance(df11)[0],
+           within_block_variance(df12)[0],
+           within_block_variance(df13)[0],
+           within_block_variance(df14)[0],
+           within_block_variance(df15)[0]]
 
 agg_rating = [within_block_variance(df01)[1],
            within_block_variance(df02)[1],
            within_block_variance(df03)[1],
            within_block_variance(df04)[1],
            within_block_variance(df05)[1],
-           within_block_variance(df06)[1]]
+           within_block_variance(df06)[1],
+           within_block_variance(df07)[1],
+           within_block_variance(df08)[1],
+           within_block_variance(df09)[1],
+           within_block_variance(df10)[1],
+           within_block_variance(df11)[1],
+           within_block_variance(df12)[1],
+           within_block_variance(df13)[1],
+           within_block_variance(df14)[1],
+           within_block_variance(df15)[1]]
 
-plt.figure()
-plt.hist(wbcv)
-plt.xlabel('Modulator x Carrier Frequency Combination')
-plt.ylabel('Covariance of ratings between blocks')
+range_rating = [within_block_variance(df01)[2],
+           within_block_variance(df02)[2],
+           within_block_variance(df03)[2],
+           within_block_variance(df04)[2],
+           within_block_variance(df05)[2],
+           within_block_variance(df06)[2],
+           within_block_variance(df07)[2],
+           within_block_variance(df08)[2],
+           within_block_variance(df09)[2],
+           within_block_variance(df10)[2],
+           within_block_variance(df11)[2],
+           within_block_variance(df12)[2],
+           within_block_variance(df13)[2],
+           within_block_variance(df14)[2],
+           within_block_variance(df15)[2]]
+
+mean_pitch_low = []
+mean_pitch_high = []
+mean_rough_low = []
+mean_rough_high = []
+mean_trem_low = []
+mean_trem_high = []
+variance_pitch_low = []
+variance_pitch_high = []
+variance_rough_low = []
+variance_rough_high = []
+variance_trem_low = []
+variance_trem_high = []
+for i in range(len(agg_rating)):
+    mean_pitch_low = np.concatenate((mean_pitch_low, agg_rating[i]['slider_3.response'].values[0:12]))
+    mean_rough_low = np.concatenate((mean_rough_low, agg_rating[i]['slider_3.response'].values[21:33]))
+    mean_trem_low = np.concatenate((mean_trem_low, agg_rating[i]['slider_3.response'].values[42:54]))
+
+    mean_pitch_high = np.concatenate((mean_pitch_high,agg_rating[i]['slider_3.response'].values[12:21]))
+    mean_rough_high = np.concatenate((mean_rough_high,agg_rating[i]['slider_3.response'].values[33:42]))
+    mean_trem_high = np.concatenate((mean_trem_high, agg_rating[i]['slider_3.response'].values[54:]))
+
+    variance_pitch_low = np.concatenate((variance_pitch_low, wbcv[i][0:12]))
+    variance_rough_low = np.concatenate((variance_rough_low, wbcv[i][21:33]))
+    variance_trem_low = np.concatenate((variance_trem_low, wbcv[i][42:54]))
+
+    variance_pitch_high = np.concatenate((variance_pitch_high, wbcv[i][12:21]))
+    variance_rough_high = np.concatenate((variance_rough_high, wbcv[i][33:42]))
+    variance_trem_high = np.concatenate((variance_trem_high, wbcv[i][54:]))
+
+
+plt.subplot(3,2,1)
+plt.scatter(variance_pitch_low, mean_pitch_low)
+plt.xlabel('Variance of pitch ratings (low freq modulators)')
+plt.ylabel('Magnitude of pitch ratings')
+plt.subplot(3,2,2)
+plt.scatter(variance_pitch_high, mean_pitch_high)
+plt.xlabel('Variance of pitch ratings (high freq modulators)')
+plt.ylabel('Magnitude of pitch ratings')
+plt.subplot(3,2,3)
+plt.scatter(variance_rough_low, mean_rough_low)
+plt.xlabel('Variance of roughness ratings (low freq modulators)')
+plt.ylabel('Magnitude of roughness ratings')
+plt.subplot(3,2,4)
+plt.scatter(variance_rough_high, mean_rough_high)
+plt.xlabel('Variance of roughness ratings (high freq modulators)')
+plt.ylabel('Magnitude of roughness ratings')
+plt.subplot(3,2,5)
+plt.scatter(variance_trem_low, mean_trem_low)
+plt.xlabel('Variance of tremolo ratings (low freq modulators)')
+plt.ylabel('Magnitude of tremolo ratings')
+plt.subplot(3,2,6)
+plt.scatter(variance_trem_high, mean_trem_high)
+plt.xlabel('Variance of tremolo ratings (high freq modulators)')
+plt.ylabel('Magnitude of tremolo ratings')
+
+variance_pitch = np.concatenate((variance_pitch_low,variance_pitch_high))
+variance_rough = np.concatenate((variance_rough_low,variance_rough_high))
+variance_trem = np.concatenate((variance_trem_low,variance_trem_high))
+
+plt.subplot(3, 1, 1)
+plt.hist(variance_pitch)
+plt.xlabel('Within participant pitch response range')
+plt.ylabel('Frequency')
 for tag in ['top', 'right']:
     plt.gca().spines[tag].set_visible(False)
 plt.title('Covariance of ratings between blocks')
-
-
-#for i in range(len(wbcv)):
-
- #   plt.hist(wbcv[i], bins=np.arange(0, 100, 5), alpha=0.5, edgecolor='black', linewidth=1.2, ls='solid')
-  #  plt.xlabel('Modulator x Carrier Frequency Combination')
-   # plt.ylabel('Covariance of ratings between blocks')
-    #for tag in ['top', 'right']:
-     #   plt.gca().spines[tag].set_visible(False)
-    #plt.title('Covariance of ratings between blocks')
+plt.subplot(3, 1, 2)
+plt.hist(variance_rough)
+plt.xlabel('Within participant roughness response range')
+plt.ylabel('Frequency')
+for tag in ['top', 'right']:
+    plt.gca().spines[tag].set_visible(False)
+plt.subplot(3, 1, 3)
+plt.hist(variance_trem)
+plt.xlabel('Within participant tremolo response range')
+plt.ylabel('Frequency')
+for tag in ['top', 'right']:
+    plt.gca().spines[tag].set_visible(False)
 
 
 fig, ax = plt.subplots(1, 2, figsize=(12, 7))
