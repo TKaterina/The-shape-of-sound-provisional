@@ -63,19 +63,22 @@ xtab15, rt15, _ = prep(df15)
 
 rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6, rt7, rt8, rt9, rt10, rt11, rt12, rt13, rt14, rt15])
 
-# plot the response times
-bins = np.linspace(0, 20, 40)
-plt.hist(rt, bins)
-plt.title('Histogram of response times')
-plt.ylabel('Frequency')
-plt.xlabel('Time (seconds)')
-plt.xticks(bins, rotation=45)
-
 
 M = np.mean(rt.values)
 SD = np.std(rt.values)
 lower_bound = M - 2*SD
 upper_bound = M + 2*SD
+
+# plot the response times
+bins = np.linspace(0, 15, 15)
+plt.hist(rt, bins)
+plt.axvline(upper_bound, color='r', ls='dotted')
+plt.axvline(M, color='k', ls='dashed')
+plt.title('Histogram of response times')
+plt.ylabel('Frequency')
+plt.xlabel('Time (seconds)')
+plt.xticks(bins, rotation=45)
+plt.legend(['Upper outlier bound', 'Mean response time', 'Response times'])
 
 def remove_outliers(xtab,upper,lower):
 
@@ -106,6 +109,7 @@ ratings = [remove_outliers(xtab1, upper_bound, lower_bound)[0],
 output = np.zeros((len(ratings), 1))
 result = np.zeros((len(ratings[0]), 3))
 variance = np.zeros((len(ratings[0]), 3))
+standard_deviation = np.zeros((len(ratings[0]), 3))
 n_obs = np.zeros((len(ratings[0]), 3))
 
 for k in np.arange(0,3):
@@ -120,6 +124,7 @@ for k in np.arange(0,3):
 
         n_obs[j][k] = count
         variance[j][k] = np.nanvar(output)
+        standard_deviation[j][k] = np.nanstd(output)
         result[j][k] = np.nanmean(output)
 
 
@@ -136,9 +141,10 @@ plt.title('Percept x AM freq')
 
 # calculation of between subject coefficient of variation for each modulator frequency and percept.
 btw_var = np.sqrt(n_obs * variance) / result
+btw_var2 = standard_deviation/result
 
 plt.figure()
-plt.plot(np.arange(7), btw_var, lw=2)
+plt.plot(np.arange(7), btw_var2, lw=2)
 plt.xticks(np.arange(7), am)
 plt.xlabel('Amplitude Modulation Frequency (Hz)')
 plt.ylabel('Covariance of ratings')

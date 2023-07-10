@@ -72,6 +72,15 @@ SD = np.std(rt.values)
 lower_bound = M - 2*SD
 upper_bound = M + 2*SD
 
+bins = np.linspace(0, 15, 15)
+plt.hist(rt, bins)
+plt.axvline(upper_bound, color='r', ls='dotted')
+plt.axvline(M, color='k', ls='dashed')
+plt.title('Histogram of response times')
+plt.ylabel('Frequency')
+plt.xlabel('Time (seconds)')
+plt.xticks(bins, rotation=45)
+plt.legend(['Upper outlier bound', 'Mean response time', 'Response times'])
 
 def remove_outliers(xtab,upper,lower):
 
