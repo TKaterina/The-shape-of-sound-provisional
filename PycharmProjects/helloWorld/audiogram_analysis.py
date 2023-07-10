@@ -6,6 +6,12 @@ import numpy as np
 df07 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s007_Roughness._2023_Jul_03_1305.csv")
 df08 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s008_Roughness._2023_Jul_03_1505.csv")
 df09 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s009_Roughness._2023_Jul_04_1313.csv")
+df10 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S010_Roughness._2023_Jul_04_1433.csv")
+df11 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s011_Roughness._2023_Jul_05_1215.csv")
+df12 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s012_Roughness._2023_Jul_05_1304.csv")
+df13 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s013_Roughness._2023_Jul_05_1408.csv")
+df14 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s014_Roughness._2023_Jul_05_1515.csv")
+df15 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S015_Roughness._2023_Jul_07_1210.csv")
 
 
 def prep(data_frame):
@@ -27,34 +33,81 @@ def prep(data_frame):
 xtab7 = prep(df07)
 xtab8 = prep(df08)
 xtab9 = prep(df09)
-
+xtab10 = prep(df10)
+xtab11 = prep(df11)
+xtab12 = prep(df12)
+xtab13 = prep(df13)
+xtab14 = prep(df14)
+xtab15 = prep(df15)
 
 x_labels = ['440.0', '700.0', '1000.0']
-y_labels = ['0.00195312', '0.00390625', '0.0078125', '0.015625', '0.03125', '0.0625', '0.125', '0.25', '0.5', '1']
+y_labels = ['1', '0.5', '0.25', '0.125', '0.0625', '0.03125', '0.015625', '0.0078125', '0.00390625', '0.00195312']
 
-fig = plt.figure()
+# good audiogram
 cax = plt.matshow(xtab7, cmap=plt.cm.gray_r)
 plt.title('Audiogram')
 plt.xticks(range(3), x_labels, rotation=90)
 plt.yticks(range(10), y_labels)
 plt.colorbar(cax)
 plt.grid(True)
-plt.show()
 
-fig = plt.figure()
+# good audiogram
 cax2 = plt.matshow(xtab8, cmap=plt.cm.gray_r)
 plt.title('Audiogram')
 plt.xticks(range(3), x_labels, rotation=90)
 plt.yticks(range(10), y_labels)
 plt.colorbar(cax2)
 plt.grid(True)
-plt.show()
 
-fig = plt.figure()
+# good audiogram
 cax3 = plt.matshow(xtab9, cmap=plt.cm.gray_r)
 plt.title('Audiogram')
 plt.xticks(range(3), x_labels, rotation=90)
 plt.yticks(range(10), y_labels)
 plt.colorbar(cax3)
 plt.grid(True)
-plt.show()
+
+#good audiogram
+cax4 = plt.matshow(xtab10, cmap=plt.cm.gray_r)
+plt.title('Audiogram')
+plt.xticks(range(3), x_labels, rotation=90)
+plt.yticks(range(10), y_labels)
+plt.colorbar(cax4)
+plt.grid(True)
+
+cax5 = plt.matshow(xtab11, cmap=plt.cm.gray_r)
+plt.title('Audiogram')
+plt.xticks(range(3), x_labels, rotation=90)
+plt.yticks(range(10), y_labels)
+plt.colorbar(cax5)
+plt.grid(True)
+
+cax6 = plt.matshow(xtab12, cmap=plt.cm.gray_r)
+plt.title('Audiogram')
+plt.xticks(range(3), x_labels, rotation=90)
+plt.yticks(range(10), y_labels)
+plt.colorbar(cax6)
+plt.grid(True)
+
+cax7 = plt.matshow(xtab13, cmap=plt.cm.gray_r)
+plt.title('Audiogram')
+plt.xticks(range(3), x_labels, rotation=90)
+plt.yticks(range(10), y_labels)
+plt.colorbar(cax7)
+plt.grid(True)
+
+# good audiogram
+cax8 = plt.matshow(xtab14, cmap=plt.cm.gray_r)
+plt.title('Audiogram')
+plt.xticks(range(3), x_labels, rotation=90)
+plt.yticks(range(10), y_labels)
+plt.colorbar(cax8)
+plt.grid(True)
+
+# questionable looking audiogram
+cax9 = plt.matshow(xtab15, cmap=plt.cm.gray_r)
+plt.title('Audiogram')
+plt.xticks(range(3), x_labels, rotation=90)
+plt.yticks(range(10), y_labels)
+plt.colorbar(cax9)
+plt.grid(True)
