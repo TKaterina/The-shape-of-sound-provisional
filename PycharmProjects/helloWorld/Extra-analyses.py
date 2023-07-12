@@ -18,6 +18,10 @@ df12 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df13 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s013_Roughness._2023_Jul_05_1408.csv")
 df14 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s014_Roughness._2023_Jul_05_1515.csv")
 df15 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S015_Roughness._2023_Jul_07_1210.csv")
+df16 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s016_Roughness._2023_Jul_07_1513.csv")
+df17 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s017_Roughness._2023_Jul_11_1207.csv")
+df18 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s018_Roughness._2023_Jul_11_1308.csv")
+df19 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S019_Roughness._2023_Jul_11_1622.csv")
 
 def prep(data_frame):
     # Keep only rows with slider responses
@@ -52,8 +56,12 @@ xtab12, rt12, _, _, df12 = prep(df12)
 xtab13, rt13, _, _, df13 = prep(df13)
 xtab14, rt14, _, _, df14 = prep(df14)
 xtab15, rt15, _, _, df15 = prep(df15)
+xtab16, rt16, _, _, df16 = prep(df16)
+xtab17, rt17, _, _, df17 = prep(df17)
+xtab18, rt18, _, _, df18 = prep(df18)
+xtab19, rt19, _, _, df19 = prep(df19)
 
-rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6, rt7, rt8, rt9, rt10, rt11, rt12, rt13, rt14, rt15])
+rt = pd.concat([rt1, rt2, rt3, rt4, rt5, rt6, rt7, rt8, rt9, rt10, rt11, rt12, rt13, rt14, rt15, rt16, rt17, rt18, rt19])
 
 M = np.mean(rt.values)
 SD = np.std(rt.values)
@@ -85,7 +93,11 @@ ratings = [remove_outliers(xtab1, upper_bound, lower_bound)[0],
            remove_outliers(xtab12, upper_bound, lower_bound)[0],
            remove_outliers(xtab13, upper_bound, lower_bound)[0],
            remove_outliers(xtab14, upper_bound, lower_bound)[0],
-           remove_outliers(xtab15, upper_bound, lower_bound)[0]]
+           remove_outliers(xtab15, upper_bound, lower_bound)[0],
+           remove_outliers(xtab16, upper_bound, lower_bound)[0],
+           remove_outliers(xtab17, upper_bound, lower_bound)[0],
+           remove_outliers(xtab18, upper_bound, lower_bound)[0],
+           remove_outliers(xtab19, upper_bound, lower_bound)[0]]
 
 output = np.zeros((len(ratings), 1))
 result = np.zeros([len(carrier), len(am), 3])
@@ -144,7 +156,11 @@ wbcv = [within_block_variance(df01)[0],
            within_block_variance(df12)[0],
            within_block_variance(df13)[0],
            within_block_variance(df14)[0],
-           within_block_variance(df15)[0]]
+           within_block_variance(df15)[0],
+           within_block_variance(df16)[0],
+           within_block_variance(df17)[0],
+           within_block_variance(df18)[0],
+           within_block_variance(df19)[0]]
 
 agg_rating = [within_block_variance(df01)[1],
            within_block_variance(df02)[1],
@@ -160,7 +176,11 @@ agg_rating = [within_block_variance(df01)[1],
            within_block_variance(df12)[1],
            within_block_variance(df13)[1],
            within_block_variance(df14)[1],
-           within_block_variance(df15)[1]]
+           within_block_variance(df15)[1],
+           within_block_variance(df16)[1],
+           within_block_variance(df17)[1],
+           within_block_variance(df18)[1],
+           within_block_variance(df19)[1]]
 
 range_rating = [within_block_variance(df01)[2],
            within_block_variance(df02)[2],
@@ -176,7 +196,11 @@ range_rating = [within_block_variance(df01)[2],
            within_block_variance(df12)[2],
            within_block_variance(df13)[2],
            within_block_variance(df14)[2],
-           within_block_variance(df15)[2]]
+           within_block_variance(df15)[2],
+           within_block_variance(df16)[2],
+           within_block_variance(df17)[2],
+           within_block_variance(df18)[2],
+           within_block_variance(df19)[2]]
 
 mean_pitch_low = []
 mean_pitch_high = []
