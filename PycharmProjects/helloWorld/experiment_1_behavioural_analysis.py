@@ -73,10 +73,10 @@ def remove_outliers(xtab_collection, xtab_agg_collection, upper, lower, idx):
 
     return ratings, agg_ratings
 
-
-ratings_collection = {}
-agg_ratings_collection = {}
-for i in range(len(names)):
-    ratings_collection[i], agg_ratings_collection[i] = remove_outliers(xtab_collection, xtab_agg_collection, upper_bound, lower_bound, i)
-
+#
+# ratings_collection = {}
+# agg_ratings_collection = {}
+# for i in range(len(names)):
+#     ratings_collection[i], agg_ratings_collection[i] = remove_outliers(xtab_collection, xtab_agg_collection, upper_bound, lower_bound, i)
+#
 
