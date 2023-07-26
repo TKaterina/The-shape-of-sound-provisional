@@ -4,7 +4,7 @@ import emd
 import matplotlib.pyplot as plt
 
 from scipy import signal
-import simpleaudio as sa
+# import simpleaudio as sa
 
 
 #%% --------------------------------
@@ -19,33 +19,33 @@ time = np.linspace(0, seconds,  int(seconds*sample_rate))
 # w = signal.chirp(time, f0=0.1, f1=75, t1=seconds, method='linear') / 2 + 1
 # w = signal.chirp(time, f0=0.1, f1=15, t1=seconds, method='linear') / 2  # only fluctuation
 # w = signal.chirp(time, f0=0.1, f1=70, t1=seconds, method='linear') / 2  # fluctuation and roughness
-w = signal.chirp(time, f0=0.1, f1=300, t1=seconds, method='linear') / 2  # reaches residue pitch
+w = signal.chirp(time, f0=0.1, f1=320, t1=seconds, method='linear') / 2  # reaches residue pitch
 # w = signal.chirp(time, f0=0.1, f1=1000, t1=seconds, method='linear') / 2
 
 # Carrier is the pure tone that will be modulated - set at 300Hz (arbitrary for now)
 # carrier = np.sin(2*np.pi*5500*time)  # ITD can only be heard here
-carrier = np.sin(2*np.pi*1000*time)
+carrier = np.sin(2*np.pi*440*time)
 # carrier = np.sin(2*np.pi*300*time)  # only fluctuation and roughness will be heard
 # carrier = np.sin(2*np.pi*700*time)  # just another frequency to see if the plots are consistent.
 
 
-note = w * carrier
-
+# note = w * carrier
+note = (w+1)*carrier
 
 #%% --------------------------------
 ## This tone is super weird - note that it initally sounds like tremolo but
 # shifts into a dropping pitch.
 
 
-# Ensure that highest value is in 16-bit range
-audio = note * (2**15 - 1) / np.max(np.abs(note))
-# Convert to 16-bit data
-audio = audio.astype(np.int16)
-
-play = False
-if play:
-    # Start playback
-    play_obj = sa.play_buffer(audio, 1, 2, sample_rate)
+# # Ensure that highest value is in 16-bit range
+# audio = note * (2**15 - 1) / np.max(np.abs(note))
+# # Convert to 16-bit data
+# audio = audio.astype(np.int16)
+#
+# play = False
+# if play:
+#     # Start playback
+#     play_obj = sa.play_buffer(audio, 1, 2, sample_rate)
 
 #%% --------------------------------
 # EMD
@@ -53,7 +53,7 @@ if play:
 imf = emd.sift.sift(note, imf_opts={'sd_thresh': 1e-3}) # initial threshold 1e-6
 
 IP, IF, IA = emd.spectra.frequency_transform(imf, sample_rate, 'hilbert', smooth_phase=441)
-freq_edges, freq_centres = emd.spectra.define_hist_bins(600, 1500, 128, 'linear')
+freq_edges, freq_centres = emd.spectra.define_hist_bins(140,740, 128, 'linear')
 f, hht = emd.spectra.hilberthuang(IF, IA, freq_edges, mode='amplitude', sum_time=False)
 
 # Sum within short time windows - otherwise the plot is too big...
@@ -73,18 +73,31 @@ f2, t2, pxx = signal.spectrogram(note, fs=sample_rate, nperseg=sample_rate//10, 
 
 plt.figure()
 plt.subplot(121)
-plt.imshow(hht, interpolation=None, aspect='auto', cmap='hot_r', origin='lower')
+plt.imshow(np.sqrt(hht), interpolation=None, aspect='auto', cmap='hot_r', origin='lower')
 plt.title('EMD - Hilbert-Huang Transform')
-plt.yticks(np.linspace(0, 128, 5), np.linspace(600,1500,5))
+plt.yticks(np.linspace(0, 128, 5), np.linspace(140,740,5))
 plt.xticks(np.linspace(0, hht.shape[1], 11), np.linspace(0, 10, 11))
 plt.ylabel('Frequency (Hz)')
 plt.xlabel('Time  (secs)')
 plt.subplot(122)
-plt.imshow(pxx, interpolation=None, aspect='auto', cmap='hot_r', origin='lower')
+plt.imshow(np.sqrt(pxx[24:64, :]), interpolation=None, aspect='auto', cmap='hot_r', origin='lower')
+                   # pxx[24:64, :] for carrier = 440 Hz
+                   # pxx[50:90, :] for carrier = 700 hz
+                   # pxx[80:120, :] for carrier = 1000 hz
 plt.title('Short Time Fourier Transform')
-plt.yticks(np.linspace(0, 40, 5), np.linspace(600,1500,5))
+plt.yticks(np.linspace(0, 40, 5), np.linspace(140,740,5))
 plt.xticks(np.linspace(0, pxx.shape[1], 11), np.linspace(0, 10, 11))
 plt.xlabel('Time  (secs)')
 
 
+# plot lines where behavioural stimuli were sampled
+sample = 1125000
 
+plt.subplot(212)
+plt.plot(am, result[i], lw=2)
+plt.xticks(am, am)
+plt.xlabel('Amplitude Modulation Frequency (Hz)')
+plt.ylabel('Perceived Difference Rating')
+plt.legend(['Pitch', 'Roughness', 'Tremolo'])
+for tag in ['top', 'right']:
+    plt.gca().spines[tag].set_visible(False)
