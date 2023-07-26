@@ -4,7 +4,7 @@ import numpy as np
 
 # create array of excel file names
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
-         's002_Roughness._2023_Jun_29_1409.csv',
+         #'s002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
          's004_Roughness._2023_Jun_30_1239.csv',
          's005_Roughness._2023_Jun_30_1400.csv',
@@ -69,6 +69,17 @@ SD = np.std(rt.values)
 lower_bound = M - 2*SD
 upper_bound = M + 2*SD
 
+# plot the response times
+bins = np.linspace(0, 15, 15)
+plt.hist(rt, bins)
+plt.axvline(upper_bound, color='r', ls='dotted')
+plt.axvline(M, color='k', ls='dashed')
+plt.title('Histogram of response times')
+plt.ylabel('Frequency')
+plt.xlabel('Time (seconds)')
+plt.xticks(bins, rotation=45)
+plt.legend(['Upper outlier bound', 'Mean response time', 'Response times'])
+
 # define function for removing outliers from both versions of the dataset tables
 def remove_outliers(xtab_collection, xtab_agg_collection, upper, lower, idx):
 
@@ -109,8 +120,8 @@ for k in np.arange(0,3):
                 temp[i] = 'NaN'
 
         # calculate the standard deviation and mean of each modulator for each question
-        standard_deviation[j][k] = np.nanstd(output)
-        result[j][k] = np.nanmean(output)
+        standard_deviation[j][k] = np.nanstd(temp)
+        result[j][k] = np.nanmean(temp)
 
 
 # calculate between subject coefficient of variation for each modulator frequency and percept.
@@ -138,7 +149,7 @@ mean_wbcv = wbcv_collection.mean(axis=1)
 # plot the mean ratings aggregated across carriers
 plt.figure()
 plt.plot(np.arange(7), result, lw=2)
-plt.xticks(np.arange(7), am)
+plt.xticks(np.arange(7), am, rotation = 45)
 plt.xlabel('Amplitude Modulation Frequency (Hz)')
 plt.ylabel('Perceived Difference Rating')
 plt.legend(['Pitch', 'Roughness', 'Tremolo'])
@@ -171,3 +182,44 @@ plt.grid(True)
 for tag in ['top', 'right']:
     plt.gca().spines[tag].set_visible(False)
 plt.title('Within participant variance')
+
+
+temp = np.zeros((len(ratings_collection), 1))
+result2 = np.zeros([len(carrier), len(am), 3])
+for m in np.arange(0,3): # each question
+    for k in range(len(ratings_collection[0][0])): # each carrier
+        for j in range(len(ratings_collection[0])): # each modulator
+            for i in range(len(ratings_collection)): # each participant
+                if ratings_collection[i][j][k][m] != 'Outlier':
+                    temp[i] = ratings_collection[i][j][k][m]
+                else:
+                    temp[i] = 'NaN'
+
+            result2[j][k][m] = np.nanmean(temp)
+
+
+# plot mean ratings only for 440 Hz carrier with accurate x-axis spacing
+plt.figure()
+plt.plot(am, result2[0], lw=2)
+plt.xticks(am, am)
+plt.xlabel('Amplitude Modulation Frequency (Hz)')
+plt.ylabel('Perceived Difference Rating')
+plt.legend(['Pitch', 'Roughness', 'Tremolo'])
+for tag in ['top', 'right']:
+    plt.gca().spines[tag].set_visible(False)
+
+# plot mean ratings for each carrier separately
+carrier_title = ['440 Hz carrier', '700 Hz carrier', '1000 Hz carrier']
+plt.figure()
+for i in np.arange(0,3):
+    plt.subplot(1,3,i+1)
+    plt.plot(np.arange(7), result2[i], lw=2)
+    plt.xticks(np.arange(7), am)
+    plt.xlabel('Amplitude Modulation Frequency (Hz)')
+    plt.ylabel('Perceived Difference Rating')
+    plt.legend(['Pitch', 'Roughness', 'Tremolo'])
+    plt.grid(True)
+    for tag in ['top', 'right']:
+        plt.gca().spines[tag].set_visible(False)
+    plt.title(carrier_title[i])
+
