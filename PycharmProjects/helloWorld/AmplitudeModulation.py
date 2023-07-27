@@ -53,7 +53,7 @@ note = (w+1)*carrier
 imf = emd.sift.sift(note, imf_opts={'sd_thresh': 1e-3}) # initial threshold 1e-6
 
 IP, IF, IA = emd.spectra.frequency_transform(imf, sample_rate, 'hilbert', smooth_phase=441)
-freq_edges, freq_centres = emd.spectra.define_hist_bins(140,740, 128, 'linear')
+freq_edges, freq_centres = emd.spectra.define_hist_bins(118,772, 128, 'linear')
 f, hht = emd.spectra.hilberthuang(IF, IA, freq_edges, mode='amplitude', sum_time=False)
 
 # Sum within short time windows - otherwise the plot is too big...
@@ -75,7 +75,7 @@ plt.figure()
 plt.subplot(121)
 plt.imshow(np.sqrt(hht), interpolation=None, aspect='auto', cmap='hot_r', origin='lower')
 plt.title('EMD - Hilbert-Huang Transform')
-plt.yticks(np.linspace(0, 128, 5), np.linspace(140,740,5))
+plt.yticks(np.linspace(0, 128, 5), np.linspace(118,772,5))
 plt.xticks(np.linspace(0, hht.shape[1], 11), np.linspace(0, 10, 11))
 plt.ylabel('Frequency (Hz)')
 plt.xlabel('Time  (secs)')
@@ -85,19 +85,21 @@ plt.imshow(np.sqrt(pxx[24:64, :]), interpolation=None, aspect='auto', cmap='hot_
                    # pxx[50:90, :] for carrier = 700 hz
                    # pxx[80:120, :] for carrier = 1000 hz
 plt.title('Short Time Fourier Transform')
-plt.yticks(np.linspace(0, 40, 5), np.linspace(140,740,5))
+plt.yticks(np.linspace(0, 40, 5), np.linspace(118,772,5))
 plt.xticks(np.linspace(0, pxx.shape[1], 11), np.linspace(0, 10, 11))
 plt.xlabel('Time  (secs)')
 
 
 # plot lines where behavioural stimuli were sampled
-sample = 1125000
+sample = 110500
 
-plt.subplot(212)
-plt.plot(am, result[i], lw=2)
-plt.xticks(am, am)
-plt.xlabel('Amplitude Modulation Frequency (Hz)')
-plt.ylabel('Perceived Difference Rating')
-plt.legend(['Pitch', 'Roughness', 'Tremolo'])
-for tag in ['top', 'right']:
-    plt.gca().spines[tag].set_visible(False)
+plt.figure()
+plt.imshow(np.sqrt(hht), interpolation=None, aspect='auto', cmap='hot_r', origin='lower')
+for ii in np.arange(0,7):
+    plt.axvline(sample, color='k', ls='dotted')
+    sample = sample/2
+plt.title('EMD - Hilbert-Huang Transform')
+plt.yticks(np.linspace(0, 128, 5), np.linspace(118,772,5))
+plt.xticks(np.linspace(0, hht.shape[1], 11), np.linspace(0, 10, 11))
+plt.ylabel('Frequency (Hz)')
+plt.xlabel('Time  (secs)')
