@@ -1,3 +1,5 @@
+# VISUALISATION OF AUDIOGRAMS FOR INSPECTION AND PARTICIPANT EXCLUSION
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np

@@ -1,3 +1,5 @@
+# QUANTITATIVE COMPARISON BETWEEN EMD DECOMPOSITION OF BEHAVIOURAL STIMULI
+
 import numpy as np
 import emd
 import matplotlib.pyplot as plt

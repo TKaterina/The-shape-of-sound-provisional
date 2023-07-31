@@ -1,10 +1,12 @@
+# PAIRED SAMPLES T-TESTS SEPARATED BY CARRIER
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import glob
 from scipy import stats
 
-# create array of excel file names
+# create array of excel file names (remove participant 2)
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
          #'s002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
@@ -33,11 +35,12 @@ ratings700 = []
 ratings1000 = []
 am = []
 response_time = []
+# xtab_collection variables to be used for outlier exclusion
 xtab_collection_440 = {}
 xtab_collection_700 = {}
 xtab_collection_1000 = {}
 
-
+# version without excluding outliers
 for ii in range(len(names)):
 
     csv_files = csv_file = 'C://Users/ktamp/OneDrive/Desktop/The-shape-of-sound-provisional-master/data/' + names[ii]
@@ -81,6 +84,8 @@ SD = np.std(rts)
 lower_bound = M - 2*SD
 upper_bound = M + 2*SD
 
+# provisional second version with exclusion of outliers
+
 # for ii in range(len(xtab_collection_440)):
 #     drops = ((xtab_collection_440[ii]['slider_3.rt'].values > upper_bound) | (xtab_collection_440[ii]['slider_3.rt'].values < lower_bound))
 #     xtab_collection_440[ii][drops == True] = np.nan
@@ -98,7 +103,9 @@ upper_bound = M + 2*SD
 #     ratings1000.append(xtab_collection_1000[ii]['slider_3.response'].values.reshape(3, 7).T)
 
 # Paired-sample t-test
-# could do a comparison for all percpets between carriers but that's not very informative
+ratings440 = np.nan_to_num(ratings440)
+ratings700 = np.nan_to_num(ratings700)
+ratings1000 = np.nan_to_num(ratings1000)
 ratings_coll = [ratings440, ratings700, ratings1000]
 
 # ppts x am x question

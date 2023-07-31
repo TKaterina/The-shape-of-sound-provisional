@@ -1,3 +1,5 @@
+# SCRIPT VISUALISING TIME-FREQUENCY DISTRIBUTIONS FOR CHANGING SIGNAL
+
 import numpy as np
 from scipy import signal, ndimage
 import emd

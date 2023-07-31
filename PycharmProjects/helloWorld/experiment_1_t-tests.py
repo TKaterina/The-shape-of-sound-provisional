@@ -1,3 +1,5 @@
+# PAIRED SAMPLES T-TESTS AGGREGATED ACROSS CARRIERS
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,6 +33,7 @@ names = ['S001_Roughness._2023_Jun_29_1205.csv',
 ratings = []
 am = []
 response_time = []
+# xtab_collection variable to be used for outlier exclusion
 xtab_collection = {}
 
 
@@ -46,19 +49,14 @@ for ii in range(len(names)):
     df = df[['carrier', 'am', 'question', 'slider_3.response', 'slider_3.rt']]
 
     xtab = df.pivot_table(index=['question', 'am'])
-    xtab_collection[ii] = xtab
 
     response_time.append(df['slider_3.rt'].to_frame())
 
     am.append(np.unique(df['am'].values))
     ratings.append(xtab['slider_3.response'].values.reshape(3, 7).T)
 
-ratings = []
-am = []
-response_time = []
-xtab_collection = {}
-carr = []
-#
+# provisional second version for outlier exclusion
+
 # for ii in range(len(names)):
 #
 #     csv_files = csv_file = 'C://Users/ktamp/OneDrive/Desktop/The-shape-of-sound-provisional-master/data/' + names[ii]
@@ -70,14 +68,11 @@ carr = []
 #
 #     data_frame = data_frame[['carrier', 'am', 'question', 'slider_3.response', 'slider_3.rt']]
 #
-#     xtab = data_frame.pivot_table(index=['question', 'am', 'carrier'])
-#
-#     # ratings = xtab['slider_3.response'].values.reshape(3, 7, 3).T
-#     response_time.append(data_frame['slider_3.rt'].to_frame())
+#     xtab = data_frame.pivot_table(index=['question', 'am'])
+#     xtab_collection[ii] = xtab
 #
 #     am.append(np.unique(data_frame['am'].values))
-#     carr.append(np.unique(data_frame['carrier'].values))
-#     ratings.append(xtab['slider_3.response'].values.reshape(3, 7, 3).T)
+#     ratings.append(xtab['slider_3.response'].values.reshape(3, 7).T)
 #
 # rts = response_time[0]
 # for i in range(len(names)-1):
@@ -95,7 +90,10 @@ carr = []
 #
 #     ratings.append(xtab_collection[ii]['slider_3.response'].values.reshape(3, 7).T)
 
-# ppts x am x question
+
+# paired samples t-test
+# # ppts x am x question
+# ratings = np.nan_to_num(ratings)
 ratings = np.concatenate([rt[None, :, :] for rt in ratings], axis=0)
 
 # comparing pitch and roughness here

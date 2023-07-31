@@ -1,3 +1,5 @@
+# PROVISIONAL VERSION OF BEHAVIOURAL ANALYSIS WITH MULTIPLE PLOTS AND EXPERIMENTAL VISUALISATIONS
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -25,13 +27,6 @@ df19 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisio
 df20 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S020_Roughness._2023_Jul_12_1208.csv")
 df21 = pd.read_csv("C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s021_Roughness._2023_Jul_12_1607.csv")
 
-
-# filename = ["C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S001_Roughness._2023_Jun_29_1205.csv",
-#                "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s002_Roughness._2023_Jun_29_1409.csv",
- #               "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S003_Roughness._2023_Jun_29_1603.csv",
-  #              "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s004_Roughness._2023_Jun_30_1239.csv",
-   #             "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\s005_Roughness._2023_Jun_30_1400.csv",
-    #        "C:\\Users\ktamp\OneDrive\Desktop\The-shape-of-sound-provisional-master\data\S006_Roughness._2023_Jun_30_1504.csv"]
 
 def prep(data_frame):
 
