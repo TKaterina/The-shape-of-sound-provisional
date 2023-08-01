@@ -8,7 +8,7 @@ from scipy import stats
 
 # create array of excel file names
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
-         #'s002_Roughness._2023_Jun_29_1409.csv',
+         's002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
          's004_Roughness._2023_Jun_30_1239.csv',
          's005_Roughness._2023_Jun_30_1400.csv',
@@ -33,10 +33,10 @@ names = ['S001_Roughness._2023_Jun_29_1205.csv',
 ratings = []
 am = []
 response_time = []
-# xtab_collection variable to be used for outlier exclusion
-xtab_collection = {}
+# df_collection variable to be used for outlier exclusion
+df_collection = {}
 
-
+# prep data frame
 for ii in range(len(names)):
 
     csv_files = csv_file = 'C://Users/ktamp/OneDrive/Desktop/The-shape-of-sound-provisional-master/data/' + names[ii]
@@ -48,47 +48,31 @@ for ii in range(len(names)):
 
     df = df[['carrier', 'am', 'question', 'slider_3.response', 'slider_3.rt']]
 
-    xtab = df.pivot_table(index=['question', 'am'])
-
+    df_collection[ii] = df
     response_time.append(df['slider_3.rt'].to_frame())
-
     am.append(np.unique(df['am'].values))
-    ratings.append(xtab['slider_3.response'].values.reshape(3, 7).T)
 
-# provisional second version for outlier exclusion
 
-# for ii in range(len(names)):
-#
-#     csv_files = csv_file = 'C://Users/ktamp/OneDrive/Desktop/The-shape-of-sound-provisional-master/data/' + names[ii]
-#     data_frame = pd.read_csv(csv_files)
-#
-#     # Keep only rows with slider responses
-#     drops = np.isnan(data_frame['slider_3.response'].values) == False
-#     data_frame = data_frame[drops]
-#
-#     data_frame = data_frame[['carrier', 'am', 'question', 'slider_3.response', 'slider_3.rt']]
-#
-#     xtab = data_frame.pivot_table(index=['question', 'am'])
-#     xtab_collection[ii] = xtab
-#
-#     am.append(np.unique(data_frame['am'].values))
-#     ratings.append(xtab['slider_3.response'].values.reshape(3, 7).T)
-#
-# rts = response_time[0]
-# for i in range(len(names)-1):
-#     rts = np.concatenate((rts, response_time[i+1]))
-#
-#
-# M = np.mean(rts)
-# SD = np.std(rts)
-# lower_bound = M - 2*SD
-# upper_bound = M + 2*SD
-#
-# for ii in range(len(xtab_collection)):
-#     drops = ((xtab_collection[ii]['slider_3.rt'].values > upper_bound) | (xtab_collection[ii]['slider_3.rt'].values < lower_bound))
-#     xtab_collection[ii][drops == True] = np.nan
-#
-#     ratings.append(xtab_collection[ii]['slider_3.response'].values.reshape(3, 7).T)
+rts = response_time[0]
+for i in range(len(names)-1):
+    rts = np.concatenate((rts, response_time[i+1]))
+
+
+M = np.mean(rts)
+SD = np.std(rts)
+lower_bound = M - 2*SD
+upper_bound = M + 2*SD
+
+# remove outliers
+for ii in range(len(df_collection)):
+    drops = ((df_collection[ii]['slider_3.rt'].values > upper_bound) | (df_collection[ii]['slider_3.rt'].values < lower_bound))
+    df_collection[ii][drops == True] = np.nan
+
+    xtab = df_collection[ii].pivot_table(index=['question', 'am'])
+
+    # condition removes participant 2 from final ratings variable
+    if ii != 1:
+        ratings.append(xtab['slider_3.response'].values.reshape(3, 7).T)
 
 
 # paired samples t-test

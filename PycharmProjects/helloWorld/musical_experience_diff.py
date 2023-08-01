@@ -7,7 +7,7 @@ from scipy import stats
 
 # create array of excel file names (Remove participant 2 due to mutliple outliers)
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
-         #'s002_Roughness._2023_Jun_29_1409.csv',
+         's002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
          's004_Roughness._2023_Jun_30_1239.csv',
          's005_Roughness._2023_Jun_30_1400.csv',
@@ -28,16 +28,16 @@ names = ['S001_Roughness._2023_Jun_29_1205.csv',
          'S020_Roughness._2023_Jul_12_1208.csv',
          's021_Roughness._2023_Jul_12_1607.csv']
 
-# create boolean variable splitting participants into experienced and inexperienced
-# this is only possible after participant 2 is removed.
-exp = ['True', 'True', 'False', 'False', 'True', 'True', 'False', 'False', 'False', 'False', 'True', 'False', 'False', 'False',
-       'True', 'True', 'False', 'True', 'True', 'True']
 
 ratings_experience = []
 ratings_inexperience = []
 am = []
+response_time =[]
+# df_collection to be used for outlier exclusion
+df_collection = {}
 
 
+# prep data frames
 for ii in range(len(names)):
 
     csv_files = csv_file = 'C://Users/ktamp/OneDrive/Desktop/The-shape-of-sound-provisional-master/data/' + names[ii]
@@ -48,16 +48,40 @@ for ii in range(len(names)):
     df = df[drops]
 
     df = df[['carrier', 'am', 'question', 'slider_3.response', 'slider_3.rt']]
-
-    xtab = df.pivot_table(index=['question', 'am'])
-
-
-    if exp[ii] == 'True':
-        ratings_experience.append(xtab['slider_3.response'].values.reshape(3,7).T)
-    else:
-        ratings_inexperience.append(xtab['slider_3.response'].values.reshape(3, 7).T)
+    df_collection[ii] = df
 
     am.append(np.unique(df['am'].values))
+    response_time.append(df['slider_3.rt'].to_frame())
+
+
+rts = response_time[0]
+for i in range(len(names)-1):
+    rts = np.concatenate((rts, response_time[i+1]))
+
+
+M = np.mean(rts)
+SD = np.std(rts)
+lower_bound = M - 2*SD
+upper_bound = M + 2*SD
+
+# create boolean variable splitting participants into experienced and inexperienced
+exp = ['True','False', 'True', 'False', 'False', 'True', 'True', 'False', 'False', 'False', 'False', 'True', 'False', 'False', 'False',
+       'True', 'True', 'False', 'True', 'True', 'True']
+
+# remove outliers based on upper and lower bound
+for ii in range(len(df_collection)):
+    drops = ((df_collection[ii]['slider_3.rt'].values > upper_bound) | (df_collection[ii]['slider_3.rt'].values < lower_bound))
+    df_collection[ii][drops == True] = np.nan
+
+    xtab = df_collection[ii].pivot_table(index=['question', 'am'])
+
+    # condition removes participant 2 from final ratings variables and inner loop separated ppt based on experience
+    if ii != 1:
+        if exp[ii] == 'True':
+            ratings_experience.append(xtab['slider_3.response'].values.reshape(3, 7).T)
+        else:
+            ratings_inexperience.append(xtab['slider_3.response'].values.reshape(3, 7).T)
+
 
 
 # ppts x am x question

@@ -8,7 +8,7 @@ from scipy import stats
 
 # create array of excel file names (remove participant 2)
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
-         #'s002_Roughness._2023_Jun_29_1409.csv',
+         's002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
          's004_Roughness._2023_Jun_30_1239.csv',
          's005_Roughness._2023_Jun_30_1400.csv',
@@ -35,12 +35,12 @@ ratings700 = []
 ratings1000 = []
 am = []
 response_time = []
-# xtab_collection variables to be used for outlier exclusion
-xtab_collection_440 = {}
-xtab_collection_700 = {}
-xtab_collection_1000 = {}
+# df_collection variables to be used for outlier exclusion
+df_collection_440 = {}
+df_collection_700 = {}
+df_collection_1000 = {}
 
-# version without excluding outliers
+# prep data frames
 for ii in range(len(names)):
 
     csv_files = csv_file = 'C://Users/ktamp/OneDrive/Desktop/The-shape-of-sound-provisional-master/data/' + names[ii]
@@ -58,20 +58,13 @@ for ii in range(len(names)):
     df700 = df[drops700]
     df1000 = df[drops1000]
 
-    xtab440 = df440.pivot_table(index=['question', 'am'])
-    xtab700 = df700.pivot_table(index=['question', 'am'])
-    xtab1000 = df1000.pivot_table(index=['question', 'am'])
-
-    xtab_collection_440[ii] = xtab440
-    xtab_collection_700[ii] = xtab700
-    xtab_collection_1000[ii] = xtab1000
+    df_collection_440[ii] = df440
+    df_collection_700[ii] = df700
+    df_collection_1000[ii] = df1000
 
     response_time.append(df['slider_3.rt'].to_frame())
 
     am.append(np.unique(df['am'].values))
-    ratings440.append(xtab440['slider_3.response'].values.reshape(3, 7).T)
-    ratings700.append(xtab700['slider_3.response'].values.reshape(3, 7).T)
-    ratings1000.append(xtab1000['slider_3.response'].values.reshape(3, 7).T)
 
 
 rts = response_time[0]
@@ -84,28 +77,32 @@ SD = np.std(rts)
 lower_bound = M - 2*SD
 upper_bound = M + 2*SD
 
-# provisional second version with exclusion of outliers
+# remove outliers based on upper and lower bound
+for ii in range(len(df_collection_440)):
+    drops440 = ((df_collection_440[ii]['slider_3.rt'].values > upper_bound) | (df_collection_440[ii]['slider_3.rt'].values < lower_bound))
+    df_collection_440[ii][drops440 == True] = np.nan
 
-# for ii in range(len(xtab_collection_440)):
-#     drops = ((xtab_collection_440[ii]['slider_3.rt'].values > upper_bound) | (xtab_collection_440[ii]['slider_3.rt'].values < lower_bound))
-#     xtab_collection_440[ii][drops == True] = np.nan
-#
-#     ratings440.append(xtab_collection_440[ii]['slider_3.response'].values.reshape(3, 7).T)
-#
-#     drops = ((xtab_collection_700[ii]['slider_3.rt'].values > upper_bound) | (xtab_collection_700[ii]['slider_3.rt'].values < lower_bound))
-#     xtab_collection_700[ii][drops == True] = np.nan
-#
-#     ratings700.append(xtab_collection_700[ii]['slider_3.response'].values.reshape(3, 7).T)
-#
-#     drops = ((xtab_collection_1000[ii]['slider_3.rt'].values > upper_bound) | (xtab_collection_1000[ii]['slider_3.rt'].values < lower_bound))
-#     xtab_collection_1000[ii][drops == True] = np.nan
-#
-#     ratings1000.append(xtab_collection_1000[ii]['slider_3.response'].values.reshape(3, 7).T)
+    drops700 = ((df_collection_700[ii]['slider_3.rt'].values > upper_bound) | (df_collection_700[ii]['slider_3.rt'].values < lower_bound))
+    df_collection_700[ii][drops700 == True] = np.nan
 
-# Paired-sample t-test
-ratings440 = np.nan_to_num(ratings440)
-ratings700 = np.nan_to_num(ratings700)
-ratings1000 = np.nan_to_num(ratings1000)
+    drops1000 = ((df_collection_1000[ii]['slider_3.rt'].values > upper_bound) | (df_collection_1000[ii]['slider_3.rt'].values < lower_bound))
+    df_collection_1000[ii][drops1000 == True] = np.nan
+
+    xtab440 = df_collection_440[ii].pivot_table(index=['question', 'am'])
+    xtab700 = df_collection_700[ii].pivot_table(index=['question', 'am'])
+    xtab1000 = df_collection_1000[ii].pivot_table(index=['question', 'am'])
+
+    # condition removes participant 2 from final ratings variables
+    if ii != 1:
+        ratings440.append(xtab440['slider_3.response'].values.reshape(3, 7).T)
+        ratings700.append(xtab700['slider_3.response'].values.reshape(3, 7).T)
+        ratings1000.append(xtab1000['slider_3.response'].values.reshape(3, 7).T)
+
+
+# # Paired-sample t-test
+# ratings440 = np.nan_to_num(ratings440)
+# ratings700 = np.nan_to_num(ratings700)
+# ratings1000 = np.nan_to_num(ratings1000)
 ratings_coll = [ratings440, ratings700, ratings1000]
 
 # ppts x am x question
@@ -247,45 +244,6 @@ for ii in np.arange(0,3):
     plt.ylabel('t-value')
     plt.suptitle('permutation paired t-tests for difference between percepts')
 
-    # # ppts x am x question
-    # # ratings = np.concatenate([rt[None, :, :] for rt in ratings], axis=0)
-    # ratings = np.concatenate([rt[None, :, :] for rt in ratings_coll[ii]], axis=0)
-    # # ratings = ratings[~np.isnan(ratings)]
-    #
-    # nperms = 1500
-    # nulls = np.zeros((nperms,))
-    #
-    # ratings_t, ratings_p = stats.ttest_1samp(ratings, 50, axis=0)
-    # nulls[0] = ratings_t.max()  # First null is the same as the observed data
-    #
-    # for ii in range(1, nperms):
-    #     null_ratings = np.random.choice([1, -1], (20, 1, 1)) * ratings
-    #     t, p = stats.ttest_1samp(null_ratings, 50, axis=0)
-    #     nulls[ii] = t.max()
-    #
-    # thresh = np.percentile(nulls, [95, 99, 99.9])
-    #
-    # plt.figure()
-    # plt.subplot(121)
-    # plt.plot((thresh[0], thresh[0]), (0, 250), 'k')
-    # plt.plot((thresh[1], thresh[1]), (0, 250), 'k--')
-    # plt.plot((thresh[2], thresh[2]), (0, 250), 'k:')
-    # plt.legend(['p=0.05', 'p=0.01', 'p=0.001'])
-    # plt.hist(nulls, 64)
-    # plt.xlabel('t-value')
-    # plt.ylabel('number of occurrences')
-    #
-    # plt.subplot(122)
-    # plt.plot(ratings_t)
-    # plt.plot((0, 6), (thresh[0], thresh[0]), 'k')
-    # plt.plot((0, 6), (thresh[1], thresh[1]), 'k--')
-    # plt.plot((0, 6), (thresh[2], thresh[2]), 'k:')
-    # plt.legend(['Tremolo', 'Roughness', 'Pitch', 'p=0.05', 'p=0.01', 'p=0.001'])
-    # plt.xticks(np.arange(7), am[0])
-    # plt.xlabel('Amplitude Modulation Frequency (Hz)')
-    # plt.ylabel('t-value')
-    #
-    # plt.suptitle('permutation t-tests for difference from zero')
 
 
 
