@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import glob
 from scipy import stats
 
-# create array of excel file names (remove participant 2)
+# create array of excel file names
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
          's002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
@@ -100,21 +100,16 @@ for ii in range(len(df_collection_440)):
 
 
 # # Paired-sample t-test
-# ratings440 = np.nan_to_num(ratings440)
-# ratings700 = np.nan_to_num(ratings700)
-# ratings1000 = np.nan_to_num(ratings1000)
 ratings_coll = [ratings440, ratings700, ratings1000]
 
 # ppts x am x question
-for ii in np.arange(0,3):
+for ii in np.arange(0,1):
 
     ratings = np.concatenate([rt[None, :, :] for rt in ratings_coll[ii]], axis=0)
 
-    # comparing tremolo and roughness here
-    A = ratings[:, :, 0]
-    B = ratings[:, :, 1]
-    C = ratings[:, :, 2]
-
+    A = ratings[:, :, 0] # pitch
+    B = ratings[:, :, 1] # roughness
+    C = ratings[:, :, 2] # tremolo
 
     nperms = 1500
     nulls1 = np.zeros((nperms,))
@@ -128,10 +123,8 @@ for ii in np.arange(0,3):
     nulls2[0] = ratings_t2.max()
     nulls3[0] = ratings_t3.max()
 
-    # Randomly swap the conditions for half the data at each null (actually not
-    # always half the data, but each participant has a 0.5 probability of being
-    # swapped).
-    for ii in range(1, nperms):
+    # Pitch - Roughness
+    for kk in range(1, nperms):
         swaps = np.random.choice([0, 1], 20)
         perm_A = A.copy()
         perm_B = B.copy()
@@ -140,11 +133,12 @@ for ii in np.arange(0,3):
                 perm_A[jj, :] = B[jj, :]
                 perm_B[jj, :] = A[jj, :]
         t, p = stats.ttest_ind(perm_A, perm_B, axis=0)
-        nulls1[ii] = t.max()
+        nulls1[kk] = t.max()
 
     thresh1 = np.percentile(nulls1, [95, 99, 99.9])
 
-    for ii in range(1, nperms):
+    # Pitch - Tremolo
+    for kk in range(1, nperms):
         swaps = np.random.choice([0, 1], 20)
         perm_A = A.copy()
         perm_C = C.copy()
@@ -153,11 +147,12 @@ for ii in np.arange(0,3):
                 perm_A[jj, :] = C[jj, :]
                 perm_C[jj, :] = A[jj, :]
         t, p = stats.ttest_ind(perm_A, perm_C, axis=0)
-        nulls2[ii] = t.max()
+        nulls2[kk] = t.max()
 
     thresh2 = np.percentile(nulls2, [95, 99, 99.9])
 
-    for ii in range(1, nperms):
+    # Tremolo - Roughness
+    for kk in range(1, nperms):
         swaps = np.random.choice([0, 1], 20)
         perm_B = B.copy()
         perm_C = C.copy()
@@ -166,7 +161,7 @@ for ii in np.arange(0,3):
                 perm_B[jj, :] = C[jj, :]
                 perm_C[jj, :] = B[jj, :]
         t, p = stats.ttest_ind(perm_B, perm_C, axis=0)
-        nulls3[ii] = t.max()
+        nulls3[kk] = t.max()
 
     thresh3 = np.percentile(nulls3, [95, 99, 99.9])
 
@@ -187,7 +182,7 @@ for ii in np.arange(0,3):
     plt.plot((0, 6), (thresh1[0], thresh1[0]), 'k')
     plt.plot((0, 6), (thresh1[1], thresh1[1]), 'k--')
     plt.plot((0, 6), (thresh1[2], thresh1[2]), 'k:')
-    plt.legend(['Pitch', 'Roughness', 'Tremolo','p=0.05', 'p=0.01', 'p=0.001'])
+    plt.legend(['Pitch-Roughness','p=0.05', 'p=0.01', 'p=0.001'])
     plt.plot((0, 6), (-thresh1[0], -thresh1[0]), 'k')
     plt.plot((0, 6), (-thresh1[1], -thresh1[1]), 'k--')
     plt.plot((0, 6), (-thresh1[2], -thresh1[2]), 'k:')
@@ -211,7 +206,7 @@ for ii in np.arange(0,3):
     plt.plot((0, 6), (thresh2[0], thresh2[0]), 'k')
     plt.plot((0, 6), (thresh2[1], thresh2[1]), 'k--')
     plt.plot((0, 6), (thresh2[2], thresh2[2]), 'k:')
-    plt.legend(['Pitch','Roughness', 'Tremolo', 'p=0.05', 'p=0.01', 'p=0.001'])
+    plt.legend(['Pitch-Tremolo', 'p=0.05', 'p=0.01', 'p=0.001'])
     plt.plot((0, 6), (-thresh2[0], -thresh2[0]), 'k')
     plt.plot((0, 6), (-thresh2[1], -thresh2[1]), 'k--')
     plt.plot((0, 6), (-thresh2[2], -thresh2[2]), 'k:')
@@ -228,14 +223,14 @@ for ii in np.arange(0,3):
     plt.hist(nulls3, 64, color='g')
     plt.xlabel('t-value')
     plt.ylabel('number of occurences')
-    plt.title('Roughness-Tremolo')
+    plt.title('440 Hz Carrier')
 
     plt.subplot(122)
     plt.plot(ratings_t3, color='g')
     plt.plot((0, 6), (thresh3[0], thresh3[0]), 'k')
     plt.plot((0, 6), (thresh3[1], thresh3[1]), 'k--')
     plt.plot((0, 6), (thresh3[2], thresh3[2]), 'k:')
-    plt.legend(['Pitch','Roughness','Tremolo', 'p=0.05', 'p=0.01', 'p=0.001'])
+    plt.legend(['Roughness-Tremolo', 'p=0.05', 'p=0.01', 'p=0.001'])
     plt.plot((0, 6), (-thresh3[0], -thresh3[0]), 'k')
     plt.plot((0, 6), (-thresh3[1], -thresh3[1]), 'k--')
     plt.plot((0, 6), (-thresh3[2], -thresh3[2]), 'k:')

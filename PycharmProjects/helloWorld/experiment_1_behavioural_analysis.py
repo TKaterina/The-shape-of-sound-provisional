@@ -6,7 +6,7 @@ import numpy as np
 
 # create array of excel file names
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
-         #'s002_Roughness._2023_Jun_29_1409.csv',
+         's002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
          's004_Roughness._2023_Jun_30_1239.csv',
          's005_Roughness._2023_Jun_30_1400.csv',
@@ -111,15 +111,17 @@ temp = np.zeros((len(agg_ratings_collection), 1))
 result = np.zeros((len(agg_ratings_collection[0]), 3))
 standard_deviation = np.zeros((len(agg_ratings_collection[0]), 3))
 
+
 # go through all ratings per question, modulator, and participant and calculate the mean rating
 for k in np.arange(0,3):
     for j in range(len(agg_ratings_collection[0])):
         for i in range(len(agg_ratings_collection)):
-            if agg_ratings_collection[i][j][k] != 'Outlier':
-                temp[i] = agg_ratings_collection[i][j][k]
-            else:
-                # if value is an outlier, use nan in its place inside temp
-                temp[i] = 'NaN'
+            if i != 1: # removes participant 2
+                if agg_ratings_collection[i][j][k] != 'Outlier':
+                    temp[i] = agg_ratings_collection[i][j][k]
+                else:
+                    # if value is an outlier, use nan in its place inside temp
+                    temp[i] = 'NaN'
 
         # calculate the standard deviation and mean of each modulator for each question
         standard_deviation[j][k] = np.nanstd(temp)
@@ -142,8 +144,10 @@ def within_block_variance(data_frame):
 
 # calculate the within participant variance between blocks for each participant
 wbcv_collection = within_block_variance(df_collection[0])
-for i in range(len(names)-1):
-    wbcv_collection = pd.concat([wbcv_collection,within_block_variance(df_collection[i+1])], axis = 1)
+
+# remove participant 2 by starting loop from 1
+for i in np.arange(1,len(names)-1):
+    wbcv_collection = pd.concat([wbcv_collection, within_block_variance(df_collection[i+1])], axis = 1)
 
 # calculate the mean across participants
 mean_wbcv = wbcv_collection.mean(axis=1)

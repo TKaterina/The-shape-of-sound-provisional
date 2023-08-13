@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import stats
 
-# create array of excel file names (Remove participant 2 due to mutliple outliers)
+# create array of excel file names
 names = ['S001_Roughness._2023_Jun_29_1205.csv',
          's002_Roughness._2023_Jun_29_1409.csv',
          'S003_Roughness._2023_Jun_29_1603.csv',
@@ -36,7 +36,6 @@ response_time =[]
 # df_collection to be used for outlier exclusion
 df_collection = {}
 
-
 # prep data frames
 for ii in range(len(names)):
 
@@ -65,7 +64,7 @@ lower_bound = M - 2*SD
 upper_bound = M + 2*SD
 
 # create boolean variable splitting participants into experienced and inexperienced
-exp = ['True','False', 'True', 'False', 'False', 'True', 'True', 'False', 'False', 'False', 'False', 'True', 'False', 'False', 'False',
+exp = ['True', 'False', 'True', 'False', 'False', 'True', 'True', 'False', 'False', 'False', 'False', 'True', 'False', 'False', 'False',
        'True', 'True', 'False', 'True', 'True', 'True']
 
 # remove outliers based on upper and lower bound
@@ -75,7 +74,7 @@ for ii in range(len(df_collection)):
 
     xtab = df_collection[ii].pivot_table(index=['question', 'am'])
 
-    # condition removes participant 2 from final ratings variables and inner loop separated ppt based on experience
+    # condition removes participant 2 from final ratings variables and inner loop separates ppt based on experience
     if ii != 1:
         if exp[ii] == 'True':
             ratings_experience.append(xtab['slider_3.response'].values.reshape(3, 7).T)
@@ -87,6 +86,9 @@ for ii in range(len(df_collection)):
 # ppts x am x question
 ratings_experience = np.concatenate([rt[None, :, :] for rt in ratings_experience], axis=0)
 ratings_inexperience = np.concatenate([rt[None, :, :] for rt in ratings_inexperience], axis=0)
+
+comparison = ['Pitch', 'Roughness', 'Tremolo']
+colour = ['b', 'r', 'g']
 
 # comparing experience X no experience for all each sensation
 for ii in np.arange(0,3):
@@ -113,16 +115,16 @@ for ii in np.arange(0,3):
     plt.plot((thresh[1], thresh[1]), (0, 250), 'k--')
     plt.plot((thresh[2], thresh[2]), (0, 250), 'k:')
     plt.legend(['p=0.05', 'p=0.01', 'p=0.001'])
-    plt.hist(nulls, 64)
+    plt.hist(nulls, 64, color = colour[ii])
     plt.xlabel('t-value')
     plt.ylabel('number of occurences')
 
     plt.subplot(122)
-    plt.plot(ratings_t)
+    plt.plot(ratings_t, color = colour[ii])
     plt.plot((0, 6), (thresh[0], thresh[0]), 'k')
     plt.plot((0, 6), (thresh[1], thresh[1]), 'k--')
     plt.plot((0, 6), (thresh[2], thresh[2]), 'k:')
-    plt.legend(['Tremolo - Roughness', 'p=0.05', 'p=0.01', 'p=0.001'])
+    plt.legend([comparison[ii], 'p=0.05', 'p=0.01', 'p=0.001'])
     plt.plot((0, 6), (-thresh[0], -thresh[0]), 'k')
     plt.plot((0, 6), (-thresh[1], -thresh[1]), 'k--')
     plt.plot((0, 6), (-thresh[2], -thresh[2]), 'k:')
@@ -132,3 +134,4 @@ for ii in np.arange(0,3):
     plt.ylabel('t-value')
 
     plt.suptitle('permutation t-tests for difference between percepts')
+
